@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="parent" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+  minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="800.0"
+  prefWidth="1030.0" spacing="10.0" styleClass="transparent-background" stylesheets="@/css/UIStyleSheet.css"
+  xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+  fx:controller="view.MainUIController">
+  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+    minWidth="-Infinity" prefHeight="800.0" prefWidth="200.0"
+    styleClass="transparent-background" HBox.hgrow="NEVER">
+    <JFXButton fx:id="newGameBUTTON" alignment="CENTER" contentDisplay="CENTER"
+      maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="60.0" prefWidth="200.0" ripplerFill="#ff9400" styleClass="default-background"
+      text="New Game" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+      AnchorPane.topAnchor="0.0">
+      <font>
+        <Font name="Eras Demi ITC" size="28.0"/>
+      </font>
+    </JFXButton>
+    <Pane fx:id="gameOptionsPANE" layoutY="98.0" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="200.0"
+      styleClass="default-background2" AnchorPane.leftAnchor="0.0"
+      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+      <padding>
+        <Insets top="-1.0"/>
+      </padding>
+      <Label layoutX="13.0" layoutY="23.0" maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="145.0"
+        text="Enter grid size:" textFill="WHITE">
+        <font>
+          <Font name="Eras Demi ITC" size="20.0"/>
+        </font>
+      </Label>
+      <JFXTextField fx:id="gridSizeTF" alignment="CENTER" focusColor="#5a3d12"
+        layoutX="158.0" layoutY="23.0" maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0"
+        promptText="8" unFocusColor="WHITE">
+        <font>
+          <Font name="System Bold" size="20.0"/>
+        </font>
+      </JFXTextField>
+      <Label layoutX="13.0" layoutY="91.0" maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="145.0"
+        text="Picture mode:" textFill="WHITE">
+        <font>
+          <Font name="Eras Demi ITC" size="20.0"/>
+        </font>
+      </Label>
+      <JFXToggleButton fx:id="picModeTGL" contentDisplay="GRAPHIC_ONLY" layoutX="140.0"
+        layoutY="75.0" prefHeight="62.0" prefWidth="46.0" size="9.0"
+        styleClass="toggle-button-default" toggleColor="#fa8231" toggleLineColor="#fdcdad"
+        unToggleColor="#eb1616" unToggleLineColor="#e2e2e2"/>
+    </Pane>
+    <Pane fx:id="uploadPANE" layoutY="224.0" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0"
+      styleClass="default-background2" AnchorPane.topAnchor="220.0">
+      <Label layoutX="36.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="80.0"
+        text="Upload?" textFill="WHITE">
+        <font>
+          <Font name="Eras Demi ITC" size="20.0"/>
+        </font>
+      </Label>
+      <JFXToggleButton fx:id="picUploadTGL" contentDisplay="GRAPHIC_ONLY" layoutX="116.0"
+        layoutY="-6.0" prefHeight="62.0" prefWidth="46.0" size="9.0"
+        styleClass="toggle-button-default" toggleColor="#fa8231" toggleLineColor="#fdcdad"
+        unToggleColor="#eb1616" unToggleLineColor="#e2e2e2"/>
+    </Pane>
+    <Pane fx:id="browsePANE" layoutY="287.0" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0"
+      styleClass="orange-background" AnchorPane.topAnchor="275.0">
+      <padding>
+        <Insets top="9.0"/>
+      </padding>
+      <JFXButton fx:id="browseBUTTON" alignment="CENTER" contentDisplay="CENTER"
+        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+        minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0" ripplerFill="#32465a"
+        styleClass="button-background" text="Browse">
+        <font>
+          <Font name="Eras Demi ITC" size="24.0"/>
+        </font>
+      </JFXButton>
+    </Pane>
+  </AnchorPane>
+  <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+    minWidth="-Infinity" prefHeight="800.0" prefWidth="400.0"
+    styleClass="transparent-background">
+    <BorderPane fx:id="gridBORDERPANE" layoutY="61.0" maxHeight="-Infinity"
+      maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+      prefWidth="400.0" styleClass="-fx-background-color:transparent"
+      AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="65.0"/>
+    <Pane fx:id="peekPANE" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
+      maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0"
+      prefWidth="250.0" styleClass="default-background" AnchorPane.rightAnchor="0.0"
+      AnchorPane.topAnchor="0.0">
+      <JFXButton fx:id="peekBUTTON" alignment="CENTER" contentDisplay="CENTER"
+        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+        minWidth="-Infinity" prefHeight="60.0" prefWidth="250.0" ripplerFill="WHITE"
+        styleClass="button-background" text="Take a peek..">
+        <font>
+          <Font name="Eras Demi ITC" size="28.0"/>
+        </font>
+      </JFXButton>
+    </Pane>
+    <Pane fx:id="shuffleButtonPANE" layoutY="470.0" maxHeight="-Infinity"
+      maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0"
+      prefWidth="195.0" styleClass="default-background" AnchorPane.leftAnchor="0.0"
+      AnchorPane.topAnchor="470.0">
+      <JFXButton fx:id="shuffleBUTTON" alignment="CENTER" contentDisplay="CENTER"
+        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+        minWidth="-Infinity" prefHeight="60.0" prefWidth="195.0" ripplerFill="#e89511"
+        styleClass="button-background" text="Shuffle">
+        <font>
+          <Font name="Eras Demi ITC" size="28.0"/>
+        </font>
+      </JFXButton>
+    </Pane>
+    <Pane fx:id="shufflePANE" layoutY="539.0" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="140.0" prefWidth="195.0"
+      styleClass="default-background2" AnchorPane.leftAnchor="0.0"
+      AnchorPane.topAnchor="535.0">
+      <JFXButton fx:id="doItBUTTON" alignment="BOTTOM_CENTER" buttonType="RAISED"
+        contentDisplay="TEXT_ONLY" layoutX="1.0" maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity" prefHeight="140.0" prefWidth="195.0"
+        ripplerFill="#eb1616" text="Do it!">
+        <font>
+          <Font name="Eras Demi ITC" size="28.0"/>
+        </font>
+        <styleClass>
+          <String fx:value="button-background"/>
+          <String fx:value="doIt-button"/>
+        </styleClass>
+      </JFXButton>
+      <Label alignment="CENTER" contentDisplay="TEXT_ONLY" layoutX="13.0" layoutY="16.0"
+        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+        minWidth="-Infinity" prefHeight="30.0" prefWidth="177.0" text="Enter number:"
+        textFill="WHITE">
+        <font>
+          <Font name="Eras Demi ITC" size="20.0"/>
+        </font>
+      </Label>
+      <JFXTextField fx:id="shufflesTF" alignment="CENTER" focusColor="#5a3d12"
+        layoutX="48.0" layoutY="57.0" maxHeight="-Infinity" maxWidth="-Infinity"
+        minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="100.0"
+        promptText="1" unFocusColor="WHITE">
+        <font>
+          <Font name="System Bold" size="20.0"/>
+        </font>
+      </JFXTextField>
+    </Pane>
+    <Pane fx:id="goButtonPANE" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="200.0"
+      styleClass="green-background" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <JFXButton fx:id="goBUTTON" alignment="CENTER" contentDisplay="CENTER"
+        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+        minWidth="-Infinity" prefHeight="60.0" prefWidth="200.0" ripplerFill="#e89511"
+        styleClass="button-background" text="Go!">
+        <font>
+          <Font name="Eras Demi ITC" size="28.0"/>
+        </font>
+      </JFXButton>
+    </Pane>
+    <Pane fx:id="exitPANE" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity"
+      maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0"
+      prefWidth="200.0" styleClass="red-background" AnchorPane.leftAnchor="0.0"
+      AnchorPane.topAnchor="0.0">
+      <JFXButton fx:id="exitBUTTON" alignment="CENTER" contentDisplay="CENTER"
+        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+        minWidth="-Infinity" prefHeight="60.0" prefWidth="200.0" ripplerFill="BLACK"
+        styleClass="button-background" text="Exit :(">
+        <font>
+          <Font name="Eras Demi ITC" size="28.0"/>
+        </font>
+      </JFXButton>
+    </Pane>
+    <Pane fx:id="movesPANE" layoutX="305.0" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="145.0"
+      styleClass="blue-background" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Label fx:id="movesLABEL" alignment="CENTER" maxHeight="-Infinity"
+        maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0"
+        prefWidth="145.0" text="Moves: ">
+        <font>
+          <Font name="Eras Bold ITC" size="22.0"/>
+        </font>
+        <opaqueInsets>
+          <Insets/>
+        </opaqueInsets>
+      </Label>
+    </Pane>
+  </AnchorPane>
+  <AnchorPane layoutX="510.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity"
+    minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="400.0"
+    styleClass="transparent-background" HBox.hgrow="NEVER">
+    <BorderPane fx:id="peekBORDERPANE" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="400.0"
+      styleClass="transparent-background" AnchorPane.leftAnchor="0.0"
+      AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0"/>
+  </AnchorPane>
+</HBox>

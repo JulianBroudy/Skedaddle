@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+}
+
+group 'com.broudy'
+version '1.0'
+
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "org.openjfx:javafx-graphics:javafx.version:win"
+    compile 'com.jfoenix:jfoenix:9.0.8'
+    compile 'io.github.typhon0:AnimateFX:1.2.1'
+}
+
+javafx {
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+
+mainClassName = 'model.startup.Skedaddle'
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'model.startup.SkedaddleLauncher'
+    }
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

@@ -1,0 +1,133 @@
+.transparent-background{
+    -fx-background-color:transparent;
+}
+
+.default-background{
+    -fx-background-color: #40739e;
+    -fx-background-radius: 5px;
+    -fx-text-fill: white;
+}
+
+.default-background2{
+    -fx-background-color: #487eb0;
+    -fx-background-radius: 5px;
+    -fx-text-fill: white;
+}
+
+.red-background{
+    -fx-background-color: #E81123;
+    -fx-background-radius: 5px;
+    -fx-text-fill: black;
+}
+
+.orange-background{
+    -fx-background-color: #fa8231;
+    -fx-background-radius: 5px;
+}
+
+.green-background{
+    -fx-background-color: #44bd32;
+    -fx-background-radius: 5px;
+}
+
+.blue-background{
+    -fx-background-color: #7ba4c9;
+    -fx-background-radius: 5px;
+}
+
+.shuffle-background{
+    -fx-background-color: #69797E;
+    -fx-background-radius: 5px;
+}
+
+.doIt-background{
+    -fx-background-color: #69797E;
+    -fx-background-radius: 5px;
+}
+
+.button-background{
+    -fx-background-color: transparent;
+    -fx-background-radius: 5px;
+    -fx-text-fill: white;
+}
+
+.text-field {
+    -fx-text-fill:white;
+    -fx-prompt-text-fill: #fbbd8d;
+}
+
+.text-field:focused {
+    -fx-prompt-text-fill: transparent;
+}
+
+.shuffles-text {
+    -fx-text-fill:white;
+    -fx-prompt-text-fill: #eb1616;
+}
+
+.doIt-button{
+    -fx-text-fill:#fa8231;
+    -fx-background-radius: 5px;
+}
+
+.toggle-button-default{
+    -jfx-toggle-color: #fa8231;
+    -jfx-untoggle-color: #eb1616;
+    -jfx-toggle-line-color: #FCBD93;
+    -jfx-untoggle-line-color: #e2e2e2;
+}
+
+/*#FFA958 */
+.toggle-button-picUploaded{
+    -jfx-toggle-color: #44bd32;
+    -jfx-untoggle-color: #eb1616;
+    -jfx-toggle-line-color: #94D98A;
+    -jfx-untoggle-line-color: #e2e2e2;
+}
+
+/* Tiles Styles */
+
+.right-pos-tile{
+    -fx-fill		:	#4cd137;
+    -fx-stroke		:	transparent;
+    -fx-stroke-width:	1;
+}
+
+.tile-hover{
+    -fx-fill		:	black;
+    -fx-stroke		:	transparent;
+    -fx-stroke-width:	1;
+}
+
+.wrong-pos-tile{
+    -fx-fill		:	#fa8231;
+    -fx-stroke		:	transparent;
+    -fx-stroke-width:	1;
+}
+
+/* Picture Tiles Styles */
+
+.right-pos-tilePic{
+    -fx-fill		:	transparent;
+    -fx-stroke		:	#4cd137;
+    -fx-stroke-width:	1;
+    -fx-stroke-type	:	outside;
+    -fx-background-radius: 50px;
+}
+
+
+.tile-hoverPic{
+    -fx-fill		:	transparent;
+    -fx-stroke		:	black;
+    -fx-stroke-width:	1;
+    -fx-stroke-type	:	outside;
+    -fx-background-radius: 50px;
+}
+
+.wrong-pos-tilePic{
+    -fx-fill		:	transparent;
+    -fx-stroke		:	#fa8231;
+    -fx-stroke-width:	1;
+    -fx-stroke-type	:	outside;
+    -fx-background-radius: 50px;
+}
