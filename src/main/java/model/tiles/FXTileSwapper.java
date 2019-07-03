@@ -5,8 +5,12 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import model.service.TransitionsGenerator;
 import model.service.TransitionsGenerator.XorY;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class FXTileSwapper implements Runnable {
+
+  private final static Logger logger = LogManager.getLogger(FXTileSwapper.class);
 
   private static Object aLock = new Object();
   private static ArrayList<Integer> order = new ArrayList<>();
@@ -16,6 +20,7 @@ public class FXTileSwapper implements Runnable {
 
 
   public FXTileSwapper(FXTile thisTile, FXTile thatTile) {
+    logger.traceEntry(thisTile.getID());
     this.thisTile = thisTile;
     this.thatTile = thatTile;
     myNumber = counter++;
@@ -23,17 +28,17 @@ public class FXTileSwapper implements Runnable {
 
   @Override
   public void run() {
-    System.out.println(myNumber + " - I'm in run bro!");
+    logger.traceEntry(myNumber.toString());
     order.add(myNumber);
     order.sort(Integer::compareTo);
     synchronized (aLock) {
-
-      System.out.println(myNumber + " - I'm in synchronized bro!");
+      logger.traceEntry(myNumber + "in synchronized.");
       while (!order.get(0).equals(myNumber)) {
         try {
-          System.out.println(myNumber + " - I'm gonna wait bro!");
+          logger.traceEntry(myNumber + "waiting...");
           aLock.wait();
         } catch (InterruptedException e) {
+          logger.error(e);
           e.printStackTrace();
         }
       }
@@ -52,11 +57,14 @@ public class FXTileSwapper implements Runnable {
           .generateParallelTransition(swapThisTileWithThatTile, swapThatTileWithThisTile);
       parallelTransition.setOnFinished(
           handler -> {
+            logger.traceEntry();
             synchronized (aLock) {
+              logger.traceEntry("myID:" + Thread.currentThread().getId() + myNumber
+                  + " in synchronized of OnFinished handler.");
               order.remove(myNumber);
               order.sort(Integer::compareTo);
-              System.out.println(myNumber + " - I'm done bro!");
               thisTile.isInRightPosition();
+              logger.traceEntry(myNumber + " handled OnFinished, notifying others.");
               aLock.notifyAll();
             }
           });

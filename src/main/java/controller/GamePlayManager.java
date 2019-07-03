@@ -31,6 +31,7 @@ public class GamePlayManager {
 
   public static void startNewGame() {
     tilesBuilder.setTilesShape(TileShape.SQUARE);
+    // int gridSize = GameState.getGridSize() == 0 ? 8 : GameState.getGridSize();
     tiles = (ArrayList<FXTile>) tilesBuilder
         .orderTiles(GameState.getGridSize(), TileClassification.SOLID);
     gameModel = new GameModel(GameState.getGridSize(), tiles);

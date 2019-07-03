@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import model.Tile;
 import model.service.factory.TileFactory;
 import model.service.factory.TileFactory.TileClassification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class TilesBuilding {
+
+  private final static Logger logger = LogManager.getLogger(TilesBuilding.class);
 
   protected ArrayList<Tile> tilesList;
 
@@ -26,6 +30,7 @@ public abstract class TilesBuilding {
   public ArrayList<? extends Tile> orderTiles(int requestedGridSize,
       TileClassification tilesClassification) {
 
+    logger.traceEntry(String.valueOf(requestedGridSize));
     TileFactory.resetFactory(requestedGridSize);
     tilesList = new ArrayList<>();
     Tile theTile;

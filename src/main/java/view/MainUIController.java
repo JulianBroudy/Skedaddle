@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -35,18 +36,21 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.util.converter.NumberStringConverter;
 import model.service.Animator;
 import model.service.ExitButtonAnimator;
 import model.service.NodeAnimator;
 import model.service.TransitionsGenerator;
 import model.startup.Skedaddle;
 import model.tiles.FXTile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 @SuppressWarnings("Duplicates")
 public class MainUIController {
 
+
+  private static final Logger logger = LogManager.getLogger(MainUIController.class);
 
   // FXML variables
   @FXML
@@ -110,6 +114,8 @@ public class MainUIController {
   @FXML
   private void initialize() {
 
+    logger.traceEntry("initialize");
+
     gamePlayManager = GamePlayManager.getInstance();
     gamePlayManager.setMainUIController(this);
 
@@ -141,6 +147,8 @@ public class MainUIController {
 
     addListeners();
 
+    logger.traceExit("initialize");
+
   }
 
   /**
@@ -148,18 +156,29 @@ public class MainUIController {
    */
   private void initializeBindings() {
 
+    logger.traceEntry("initializing bindings.");
+
     isActive.bindBidirectional(GameState.isActiveProperty());
 
-    gridSizeTF.textProperty()
-        .bindBidirectional(GameState.gridSizeProperty(), new NumberStringConverter());
+    GameState.gridSizeProperty().bind(Bindings.createIntegerBinding(
+        () -> gridSizeTF.getText().isEmpty() ? Integer.parseInt(gridSizeTF.getPromptText())
+            : Integer.parseInt(gridSizeTF.getText()), gridSizeTF.textProperty())
+    );
 
+    // gridSizeTF.promptTextProperty()
+    //     .bindBidirectional(GameState.gridSizeProperty(), new NumberStringConverter());
     movesLABEL.textProperty().bind(GameState.currentMovesProperty().asString());
+
+    logger.traceExit("done with bindings.");
+
   }
 
   /**
    * Sets required event handlers.
    */
   private void setEventHandlers() {
+
+    logger.traceEntry("initializing event handlers.");
 
     newGameBUTTON.setOnAction(handle -> {
       if (isActive.get()) {
@@ -207,6 +226,9 @@ public class MainUIController {
     shuffleBUTTON.setOnAction(handle -> setVisibility(!shufflePANE.isVisible(), shufflePANE));
 
     exitBUTTON.setOnAction(handle -> System.exit(0));
+
+    logger.traceExit("done with event handlers.");
+
   }
 
 
@@ -214,6 +236,8 @@ public class MainUIController {
    * Adds required listeners.
    */
   private void addListeners() {
+
+    logger.traceEntry("adding listeners.");
 
     isActive.addListener((observable, oldValue, newValue) -> {
       if (newValue) {
@@ -252,6 +276,8 @@ public class MainUIController {
     picUploadTGL.selectedProperty().addListener((observable, was, isSelected) -> {
       setVisibility(isSelected, browsePANE);
     });
+
+    logger.traceExit("done with listeners.");
 
   }
 
@@ -394,17 +420,17 @@ public class MainUIController {
   }
 
   public void showWinnerScreen() {
-    Text wellDone = new Text("Well Done");
+    Text wellDoneText = new Text("Well Done");
     Text smileyFace = new Text(":)");
-    VBox tmp2 = new VBox(wellDone, smileyFace);
+    VBox vBoxContainer = new VBox(wellDoneText, smileyFace);
     smileyFace.setRotate(90);
-    wellDone.setFont(Font.font("Eras Bold ITC", 70));
-    wellDone.setFill(Color.WHITE);
+    wellDoneText.setFont(Font.font("Eras Bold ITC", 70));
+    wellDoneText.setFill(Color.WHITE);
     smileyFace.setFont(Font.font("Eras Bold ITC", 120));
     smileyFace.setFill(Color.DARKORANGE);
-    tmp2.setAlignment(Pos.CENTER);
-    tmp2.setSpacing(10);
+    vBoxContainer.setAlignment(Pos.CENTER);
+    vBoxContainer.setSpacing(10);
     new Tada(gridBORDERPANE).play();
-    gridBORDERPANE.setCenter(tmp2);
+    gridBORDERPANE.setCenter(vBoxContainer);
   }
 }

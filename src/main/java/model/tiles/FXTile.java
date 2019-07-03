@@ -36,8 +36,8 @@ public abstract class FXTile extends StackPane implements Tile {
     shape = fxFactory.createShape(getShapeType(), initialCoordinates);
     getChildren().add(shape);
     getChildren().add(text);
-    setTranslateX(getCoordinates().getCol() * FXTileFactory.requestedTileSize.get());
-    setTranslateY(getCoordinates().getRow() * FXTileFactory.requestedTileSize.get());
+    setTranslateX(getCoordinates().getCol() * FXTileFactory.getRequestedTileSize());
+    setTranslateY(getCoordinates().getRow() * FXTileFactory.getRequestedTileSize());
   }
 
   @Override

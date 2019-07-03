@@ -33,24 +33,24 @@ public abstract class FXTileFactory extends TileFactory {
     return requestedTileSize.get();
   }
 
-  public static void setRequestedTileSize(double requestedTileSize) {
-    FXTileFactory.requestedTileSize.set(requestedTileSize);
-  }
-
   public static DoubleProperty requestedTileSizeProperty() {
     return requestedTileSize;
+  }
+
+  public static void setRequestedTileSize(double requestedTileSize) {
+    FXTileFactory.requestedTileSize.set(requestedTileSize);
   }
 
   public static double getGridLengthInPixels() {
     return gridLengthInPixels.get();
   }
 
-  public static void setGridLengthInPixels(double gridLengthInPixels) {
-    FXTileFactory.gridLengthInPixels.set(gridLengthInPixels);
-  }
-
   public static DoubleProperty gridLengthInPixelsProperty() {
     return gridLengthInPixels;
+  }
+
+  public static void setGridLengthInPixels(double gridLengthInPixels) {
+    FXTileFactory.gridLengthInPixels.set(gridLengthInPixels);
   }
 
   public Shape createShape(TileShape tileShape, Coordinates coordinates) {
@@ -66,7 +66,7 @@ public abstract class FXTileFactory extends TileFactory {
 
   public Text createText(String id) {
     Text text = new Text(id);
-    text.setFont(Font.font(requestedTileSize.get() / 2));
+    text.setFont(Font.font(getRequestedTileSize() / 2));
     text.setFill(Color.WHITE);
     return text;
   }
@@ -93,9 +93,9 @@ public abstract class FXTileFactory extends TileFactory {
   class ShapeFactory {
 
     Rectangle newRectangle(int row, int col) {
-      Rectangle tmp = new Rectangle(requestedTileSize.get() - 4, requestedTileSize.get() - 4);
-      tmp.setArcHeight(requestedTileSize.get() / 10);
-      tmp.setArcWidth(requestedTileSize.get() / 10);
+      Rectangle tmp = new Rectangle(getRequestedTileSize() - 4, getRequestedTileSize() - 4);
+      tmp.setArcHeight(getRequestedTileSize() / 10);
+      tmp.setArcWidth(getRequestedTileSize() / 10);
       return tmp;
     }
 

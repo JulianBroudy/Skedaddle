@@ -14,7 +14,7 @@ public class GameState {
 
   static {
     GameState.isActive = new SimpleBooleanProperty(false);
-    GameState.gridSize = new SimpleIntegerProperty(3);
+    GameState.gridSize = new SimpleIntegerProperty(8);
     GameState.currentMoves = new SimpleIntegerProperty();
   }
 
