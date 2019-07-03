@@ -1,6 +1,7 @@
 package model.service;
 
 import animatefx.animation.AnimationFX;
+import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Transition;
@@ -32,10 +33,9 @@ public class AnimationUnifier {
   }
 
   public AnimationUnifier(Transition transition) {
-   this.transition = transition;
-   this.type = AnimationType.ONE_TRANSITION;
+    this.transition = transition;
+    this.type = AnimationType.ONE_TRANSITION;
   }
-
 
   public void play() {
     switch (type) {
@@ -55,6 +55,47 @@ public class AnimationUnifier {
         transition.play();
       }
     }
+  }
+
+  public void stop() {
+    switch (type) {
+      case ANIMATION: {
+        animationFX.stop();
+        break;
+      }
+      case PARALLEL: {
+        parallelTransition.stop();
+        break;
+      }
+      case SEQUENTIAL: {
+        sequentialTransition.stop();
+        break;
+      }
+      default: {
+        transition.stop();
+      }
+    }
+  }
+
+  public Animation.Status getStatus() {
+    Animation.Status animationsStatus;
+    switch (type) {
+      case ANIMATION: {
+        throw new UnsupportedOperationException("AnimationFX does not support a getStatus method!");
+      }
+      case PARALLEL: {
+        animationsStatus = parallelTransition.getStatus();
+        break;
+      }
+      case SEQUENTIAL: {
+        animationsStatus = sequentialTransition.getStatus();
+        break;
+      }
+      default: {
+        animationsStatus = transition.getStatus();
+      }
+    }
+    return animationsStatus;
   }
 
   public void setNode(Node node) {

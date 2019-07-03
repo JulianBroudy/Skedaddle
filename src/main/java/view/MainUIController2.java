@@ -3,8 +3,8 @@
 //import com.jfoenix.controls.JFXButton;
 //import com.jfoenix.controls.JFXTextField;
 //import com.jfoenix.controls.JFXToggleButton;
-//import controller.GameController;
-//import controller.GameController.GameMode;
+//import controller.GameState;
+//import controller.GameState.GameMode;
 //import java.io.File;
 //import java.util.Objects;
 //import javafx.application.Platform;
@@ -137,12 +137,12 @@
 //    });
 //    shufflesTF.setOnKeyPressed(e -> {
 //      if (e.getCode().equals(KeyCode.ENTER)) {
-//        GameController.shuffleBoard(
+//        GameState.shuffleBoard(
 //            shufflesTF.getText().isEmpty() ? 1 : Integer.parseInt(shufflesTF.getText()));
 //      }
 //    });
 //    shuffleBUTTON.setOnMouseClicked(e -> shuffleButtonPANE.setVisible(!shuffleBUTTON.isVisible()));
-//    doItBUTTON.setOnMouseClicked(e -> GameController
+//    doItBUTTON.setOnMouseClicked(e -> GameState
 //        .shuffleBoard(shufflesTF.getText().isEmpty() ? 1 : Integer.parseInt(shufflesTF.getText())));
 //    peekBUTTON.setOnMouseClicked(e -> peekBORDERPANE.setVisible(!peekBORDERPANE.isVisible()));
 //    browseBUTTON.setOnMouseClicked(e -> {
@@ -201,15 +201,15 @@
 //    });
 //
 ////    initialize other bindings
-//    isActive.bindBidirectional(GameController.isActiveProperty());
+//    isActive.bindBidirectional(GameState.isActiveProperty());
 //    gridSizeTF.textProperty()
-//        .bindBidirectional(GameController.gridSizeProperty(), new NumberStringConverter());
-//    movesLABEL.textProperty().bind(GameController.currentMovesProperty().asString());
+//        .bindBidirectional(GameState.gridSizeProperty(), new NumberStringConverter());
+//    movesLABEL.textProperty().bind(GameState.currentMovesProperty().asString());
 //    picModeTGL.selectedProperty().addListener((observable, was, isSelected) -> {
 //      if (isSelected.booleanValue()) {
-//        GameController.setMode(GameMode.PICTURE);
+//        GameState.setMode(GameMode.PICTURE);
 //      } else {
-//        GameController.setMode(GameMode.NORMAL);
+//        GameState.setMode(GameMode.NORMAL);
 //      }
 //      setVisibility(isSelected.booleanValue(), uploadPANE);
 //    });

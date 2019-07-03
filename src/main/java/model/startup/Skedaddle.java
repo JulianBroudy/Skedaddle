@@ -43,6 +43,7 @@ public class Skedaddle extends Application {
             stage.initStyle(StageStyle.TRANSPARENT);
 
             primaryStage.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

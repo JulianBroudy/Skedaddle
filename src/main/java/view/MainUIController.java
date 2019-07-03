@@ -1,177 +1,369 @@
 package view;
 
+import animatefx.animation.Tada;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
-import controller.GameController;
-import controller.GameController.GameMode;
+import com.jfoenix.validation.RegexValidator;
+import controller.GamePlayManager;
+import controller.GameState;
+import controller.GameState.GameMode;
 import java.io.File;
-import java.util.Objects;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.util.Duration;
 import javafx.util.converter.NumberStringConverter;
 import model.service.Animator;
+import model.service.ExitButtonAnimator;
 import model.service.NodeAnimator;
+import model.service.TransitionsGenerator;
 import model.startup.Skedaddle;
+import model.tiles.FXTile;
 
+
+@SuppressWarnings("Duplicates")
 public class MainUIController {
+
 
   // FXML variables
   @FXML
   private HBox parent;
-
   @FXML
   private JFXButton newGameBUTTON;
-
   @FXML
   private Pane gameOptionsPANE;
-
   @FXML
   private JFXTextField gridSizeTF;
-
   @FXML
   private JFXToggleButton picModeTGL;
-
   @FXML
   private Pane uploadPANE;
-
   @FXML
   private JFXToggleButton picUploadTGL;
-
   @FXML
   private Pane browsePANE;
-
   @FXML
   private JFXButton browseBUTTON;
-
   @FXML
   private BorderPane gridBORDERPANE;
-
   @FXML
   private Pane peekPANE;
-
   @FXML
   private JFXButton peekBUTTON;
-
   @FXML
   private Pane shuffleButtonPANE;
-
   @FXML
   private JFXButton shuffleBUTTON;
-
   @FXML
   private Pane shufflePANE;
-
   @FXML
   private JFXButton doItBUTTON;
-
   @FXML
   private JFXTextField shufflesTF;
-
   @FXML
   private Pane goButtonPANE;
-
   @FXML
   private JFXButton goBUTTON;
-
   @FXML
   private Pane exitPANE;
-
   @FXML
   private JFXButton exitBUTTON;
-
   @FXML
   private Pane movesPANE;
-
   @FXML
   private Label movesLABEL;
-
   @FXML
   private BorderPane peekBORDERPANE;
-
+  private Group tilesGroup;
+  private Group peekGroup;
+  private RegexValidator gridSizeValidator;
   private ConcurrentHashMap<Node, NodeAnimator> nodesAnimations;
-
   private BooleanProperty isActive;
-
   private Image initialImage;
   private Image uploadedPic;
+  private GamePlayManager gamePlayManager;
+  private FileChooser fileChooser = new FileChooser();
 
   @FXML
   private void initialize() {
 
-    isActive = new SimpleBooleanProperty();
+    gamePlayManager = GamePlayManager.getInstance();
+    gamePlayManager.setMainUIController(this);
 
+    // Hide all unneeded panes
+    setVisibility(false, goButtonPANE, gameOptionsPANE, peekPANE, uploadPANE, movesPANE, browsePANE,
+        gridBORDERPANE, peekBORDERPANE, shuffleButtonPANE, shufflePANE);
+
+    // Initialize needed variables
+    isActive = new SimpleBooleanProperty();
+    gridSizeValidator = new RegexValidator("3-18");
+    gridSizeValidator.setRegexPattern("(^$)|([1-9]|1[0-8])");
+    gridSizeTF.getValidators().add(gridSizeValidator);
+    fileChooser.setTitle("Upload an image");
+    fileChooser.getExtensionFilters().add(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
+    initialImage = optimizeImage(new Image("images/cat.jpg", 400, 400, true, true));
+
+    // Initialize tiles holders
+    tilesGroup = new Group();
+    peekGroup = new Group();
+    gridBORDERPANE.setCenter(tilesGroup);
+    peekBORDERPANE.setCenter(peekGroup);
+
+    // Initialize needed bindings, listeners & other...
     initializeAnimations();
 
-    initializeListeners();
+    initializeBindings();
 
-//    hide all unneeded panes
-    setVisibility(false, goButtonPANE, gameOptionsPANE, peekPANE, uploadPANE, movesPANE, browsePANE,
-        gridBORDERPANE, peekBORDERPANE, shuffleButtonPANE, shufflePANE, exitPANE);
+    setEventHandlers();
 
-//    set buttons' behavior
-    newGameBUTTON.setOnMouseClicked(e -> {
-      if (isActive.get()) {
-        validateNewGame();
-      } else {
-        setVisibility(true, gameOptionsPANE, goButtonPANE);
-//        showNewGameOptions();
-      }
-    });
-    goBUTTON.setOnAction(e -> startNewGame());
-    gridSizeTF.setOnKeyPressed(e -> {
-      if (e.getCode().equals(KeyCode.ENTER)) {
-        startNewGame();
-      }
-    });
-    shufflesTF.setOnKeyPressed(e -> {
-      if (e.getCode().equals(KeyCode.ENTER)) {
-        GameController.shuffleBoard(
-            shufflesTF.getText().isEmpty() ? 1 : Integer.parseInt(shufflesTF.getText()));
-      }
-    });
-    shuffleBUTTON.setOnMouseClicked(e -> setVisibility(!shufflePANE.isVisible(),shufflePANE));
-    doItBUTTON.setOnMouseClicked(e -> GameController
-        .shuffleBoard(shufflesTF.getText().isEmpty() ? 1 : Integer.parseInt(shufflesTF.getText())));
-    peekBUTTON.setOnMouseClicked(e -> setVisibility(!peekBORDERPANE.isVisible(),peekBORDERPANE));
-    browseBUTTON.setOnMouseClicked(e -> {
-      FileChooser fileChooser = new FileChooser();
-      fileChooser.setTitle("Upload an image");
-      fileChooser.getExtensionFilters().add(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
-      File tmp = fileChooser.showOpenDialog(Skedaddle.stage);
-      if (tmp != null) {
-        uploadedPic = new Image(tmp.toURI().toString());
-        browsePANE.setStyle("-fx-background-color: #7FFF00");
-        uploadedPic = getOptimizedImage(uploadedPic);
-        picUploadTGL.getStyleClass().add("toggle-button-picUploaded");
-      }
-    });
-    exitBUTTON.setOnMouseClicked(e -> System.exit(0));
+    addListeners();
 
-    initialImage = getOptimizedImage(new Image("images/cat.jpg", 400, 400, true, true));
   }
 
   /**
-   * Sensitive method, for now depends on the order of enums in Animator TODO: implement a safer and
-   * better solution..
+   * Activates required bindings.
+   */
+  private void initializeBindings() {
+
+    isActive.bindBidirectional(GameState.isActiveProperty());
+
+    gridSizeTF.textProperty()
+        .bindBidirectional(GameState.gridSizeProperty(), new NumberStringConverter());
+
+    movesLABEL.textProperty().bind(GameState.currentMovesProperty().asString());
+  }
+
+  /**
+   * Sets required event handlers.
+   */
+  private void setEventHandlers() {
+
+    newGameBUTTON.setOnAction(handle -> {
+      if (isActive.get()) {
+        Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
+        confirmationAlert.showAndWait().filter(response -> response == ButtonType.OK)
+            .ifPresent(response -> {
+              isActive.set(false);
+              animationActivator(false, peekBORDERPANE, movesPANE, gridBORDERPANE,
+                  shuffleButtonPANE, shufflePANE);
+            });
+      } else {
+        if (gameOptionsPANE.isVisible()) {
+          animationExecutor(Animator.NUDGE,
+              gameOptionsPANE/*TODO check why <-- this pane doesn't nudge*/, goButtonPANE);
+        } else {
+          setVisibility(true, gameOptionsPANE, goButtonPANE, exitPANE);
+        }
+      }
+    });
+
+    browseBUTTON.setOnAction(handle -> {
+      File tmp = fileChooser.showOpenDialog(Skedaddle.stage);
+      if (tmp != null) {
+        browsePANE.setStyle("-fx-background-color: #7FFF00");
+        uploadedPic = new Image(tmp.toURI().toString());
+        uploadedPic = optimizeImage(uploadedPic);
+        picUploadTGL.getStyleClass().add("toggle-button-picUploaded");
+      }
+    });
+
+    goBUTTON.setOnAction(handle -> {
+      if (gridSizeTF.getText() == "1") {
+        Alert errorAlert = new Alert(AlertType.ERROR);
+        errorAlert.setContentText("With 1 tile it's not really a game!");
+        errorAlert.showAndWait();
+      } else {
+        isActive.set(true);
+      }
+    });
+
+
+    /*TODO: check why it doesn't show*/
+    peekBUTTON.setOnAction(handle -> setVisibility(!peekBORDERPANE.isVisible(), peekBORDERPANE));
+
+    shuffleBUTTON.setOnAction(handle -> setVisibility(!shufflePANE.isVisible(), shufflePANE));
+
+    exitBUTTON.setOnAction(handle -> System.exit(0));
+  }
+
+
+  /**
+   * Adds required listeners.
+   */
+  private void addListeners() {
+
+    isActive.addListener((observable, oldValue, newValue) -> {
+      if (newValue) {
+        setVisibility(false, gameOptionsPANE, goButtonPANE, uploadPANE, browsePANE);
+        PauseTransition pause = TransitionsGenerator.generaPauseTransition(0.3, doThis -> {
+          picModeTGL.setSelected(false);
+          picUploadTGL.setSelected(false);
+        });
+        pause.play();
+        setVisibility(true, exitPANE, movesPANE, gridBORDERPANE, shuffleButtonPANE, peekPANE,
+            peekBORDERPANE);
+      } else {
+        setVisibility(false, exitPANE, movesPANE, gridBORDERPANE, shuffleButtonPANE, peekPANE);
+        setVisibility(true, gameOptionsPANE, goButtonPANE);
+      }
+    });
+    // Listen to grid size in order to enforce 1-18 input
+    gridSizeTF.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (!gridSizeTF.validate()) {
+        gridSizeTF.setText(oldValue);
+      }
+    });
+
+    // Listen to changes of picture mode toggle button
+    picModeTGL.selectedProperty().addListener((observable, was, isSelected) -> {
+      if (isSelected) {
+        GameState.setMode(GameMode.PICTURE);
+      } else {
+        GameState.setMode(GameMode.NORMAL);
+        picUploadTGL.setSelected(false);
+      }
+      setVisibility(isSelected, uploadPANE);
+    });
+
+    // Listen to changes of picture upload toggle button
+    picUploadTGL.selectedProperty().addListener((observable, was, isSelected) -> {
+      setVisibility(isSelected, browsePANE);
+    });
+
+  }
+
+
+  public void loadSolution(ArrayList<? extends FXTile> tiles) {
+    // TODO: make it a snapshot of the board before shuffling and show the image?
+    //  depends on what will the "peek pane" include and how it will function later on.
+
+    peekGroup.getChildren().clear();
+    peekGroup.getChildren().addAll(tiles);
+  }
+
+
+  public void loadBoard(ArrayList<? extends FXTile> tiles) {
+    tilesGroup.getChildren().clear();
+    tilesGroup.getChildren().addAll(tiles);
+    gridBORDERPANE.setCenter(tilesGroup);
+  }
+
+//------------------------------------------------------------------------------------------------//
+//   _____                           _                       __  __      _   _               _
+//  / ____|                         (_)                     |  \/  |    | | | |             | |
+// | |     ___  _ ____   _____ _ __  _  ___ _ __   ___ ___  | \  / | ___| |_| |__   ___   __| |___
+// | |    / _ \| '_ \ \ / / _ \ '_ \| |/ _ \ '_ \ / __/ _ \ | |\/| |/ _ \ __| '_ \ / _ \ / _` / __|
+// | |___| (_) | | | \ V /  __/ | | | |  __/ | | | (_|  __/ | |  | |  __/ |_| | | | (_) | (_| \__ \
+//  \_____\___/|_| |_|\_/ \___|_| |_|_|\___|_| |_|\___\___| |_|  |_|\___|\__|_| |_|\___/ \__,_|___/
+//
+//------------------------------------------------------------------------------------------------//
+
+
+  /**
+   * Sets the nodes' visibility and activates its animation.
+   *
+   * @param visible boolean indicating nodes' new visible state.
+   * @param nodes to set visibility to and activate animation on.
+   */
+  private void setVisibility(boolean visible, Node... nodes) {
+    for (Node node : nodes) {
+      if (node.isVisible() != visible) {
+        if (visible) {
+          node.setVisible(true);
+        }
+      }
+      animationActivator(visible, node);
+    }
+  }
+
+  /**
+   * Activates animation on passed nodes.
+   *
+   * @param makeVisible should be false to hide the node.
+   * @param nodes nodes to activate animation on.
+   */
+  private void animationActivator(boolean makeVisible, Node... nodes) {
+    for (Node node : nodes) {
+      Platform.runLater(() -> {
+        Platform.runLater(() -> {
+
+          if (makeVisible) {
+            nodesAnimations.get(node).show();
+          } else {
+            nodesAnimations.get(node).hide();
+          }
+        });
+      });
+
+    }
+  }
+
+  /**
+   * Plays passed animation on all nodes.
+   *
+   * @param animation to be played.
+   * @param nodes to be animated.
+   */
+  private void animationExecutor(Animator animation, Node... nodes) {
+    for (Node node : nodes) {
+      animation.getAnimation().setNode(node);
+      Platform.runLater(() ->
+          animation.getAnimation().play()
+      );
+    }
+  }
+
+  /**
+   * Optimizes passed image by stretching it by the smaller side so it covers 400 x 400 then takes
+   * its center.
+   *
+   * @param image to be optimized.
+   * @return {@see WritableImage} 400 width 400 height.
+   */
+  private WritableImage optimizeImage(Image image) {
+    System.out.println("W: " + image.getWidth() + " h: " + image.getHeight());
+
+    double w = image.getWidth(), h = image.getHeight();
+
+    image = w < h ? new Image(image.getUrl(), 400, 0, true, true)
+        : new Image(image.getUrl(), 0, 400, true, true);
+    w = (image.getWidth() - 400) / 2;
+    h = (image.getHeight() - 400) / 2;
+
+    System.out.println("W: " + image.getWidth() + " h: " + image.getHeight());
+
+    PixelReader reader = image.getPixelReader();
+    return new WritableImage(reader, (int) w, (int) h, 400, 400);
+  }
+
+
+  /**
+   * Sensitive method, for now depends on the order of enums in Animator.
+   *
+   * TODO: implement a safer and better solution..
    */
   private void initializeAnimations() {
     nodesAnimations = new ConcurrentHashMap<>();
@@ -189,144 +381,30 @@ public class MainUIController {
         .put(peekPANE, new NodeAnimator(peekPANE, Animator.SHOW_PEEK, Animator.HIDE_PEEK));
     nodesAnimations.put(peekBORDERPANE,
         new NodeAnimator(peekBORDERPANE, Animator.SHOW_PEEKBORDER, Animator.HIDE_PEEKBORDER));
+    nodesAnimations.put(gridBORDERPANE,
+        new NodeAnimator(gridBORDERPANE, Animator.SHOW_BOARD, Animator.HIDE_BOARD));
     nodesAnimations.put(shuffleButtonPANE,
-        new NodeAnimator(shuffleButtonPANE, Animator.SHOW_SHUFFLEBUTTONPANE, Animator.HIDE_SHUFFLEBUTTONPANE));
+        new NodeAnimator(shuffleButtonPANE, Animator.SHOW_SHUFFLEBUTTONPANE,
+            Animator.HIDE_SHUFFLEBUTTONPANE));
     nodesAnimations.put(shufflePANE,
         new NodeAnimator(shufflePANE, Animator.SHOW_SHUFFLEPANE, Animator.HIDE_SHUFFLEPANE));
-
-
+    nodesAnimations.put(exitPANE, new ExitButtonAnimator(exitPANE, Animator.EXIT_INITIAL_TO_STANDBY,
+        Animator.EXIT_STANDBY_TO_INITIAL, Animator.EXIT_STANDBY_TO_INGAME,
+        Animator.EXIT_INGAME_TO_STANDBY));
   }
 
-
-  private void initializeListeners() {
-
-//    initialize other bindings
-    isActive.bindBidirectional(GameController.isActiveProperty());
-    gridSizeTF.textProperty()
-        .bindBidirectional(GameController.gridSizeProperty(), new NumberStringConverter());
-    movesLABEL.textProperty().bind(GameController.currentMovesProperty().asString());
-    picModeTGL.selectedProperty().addListener((observable, was, isSelected) -> {
-      if (isSelected.booleanValue()) {
-        GameController.setMode(GameMode.PICTURE);
-//        setVisibility(isSelected.booleanValue(), uploadPANE);
-      } else {
-        GameController.setMode(GameMode.NORMAL);
-        picUploadTGL.setSelected(false);
-//        setVisibility(isSelected.booleanValue(), uploadPANE,browsePANE);
-      }
-      setVisibility(isSelected.booleanValue(), uploadPANE);
-    });
-    picUploadTGL.selectedProperty().addListener((observable, was, isSelected) -> {
-      setVisibility(isSelected.booleanValue(), browsePANE);
-    });
-    gridSizeTF.textProperty().addListener((observable, oldText, newText) -> {
-//      TODO: Take this out of here and bind to a boolean expression
-      validateInput(observable, oldText, newText);
-      if (!((StringProperty) observable).getValue().isBlank()
-          && (Integer.parseInt(((StringProperty) observable).getValue()) > 18
-          || Integer.parseInt(((StringProperty) observable).getValue()) == 0)) {
-        ((StringProperty) observable).setValue(oldText);
-      }
-//      if (!gridSizeTF.getText().isEmpty() && !Objects.equals(newText, oldText)) {
-//        showGoBUTTON();
-//        if (exitPosition == 1)
-//          moveExitBUTTON(12);
-//          TODO: fix exit button animation
-//      } else {
-//        if (exitPosition == 2)
-//          moveExitBUTTON(21);
-//          TODO: fix exit button animation
-//        hideGoBUTTON();
-//      }
-//    });
-      setVisibility(!gridSizeTF.getText().isEmpty() && !Objects.equals(newText, oldText),
-          goButtonPANE);
-    });
-    shufflesTF.textProperty().addListener(this::validateInput);
+  public void showWinnerScreen() {
+    Text wellDone = new Text("Well Done");
+    Text smileyFace = new Text(":)");
+    VBox tmp2 = new VBox(wellDone, smileyFace);
+    smileyFace.setRotate(90);
+    wellDone.setFont(Font.font("Eras Bold ITC", 70));
+    wellDone.setFill(Color.WHITE);
+    smileyFace.setFont(Font.font("Eras Bold ITC", 120));
+    smileyFace.setFill(Color.DARKORANGE);
+    tmp2.setAlignment(Pos.CENTER);
+    tmp2.setSpacing(10);
+    new Tada(gridBORDERPANE).play();
+    gridBORDERPANE.setCenter(tmp2);
   }
-
-
-  private void showNewGameOptions() {
-    if (gameOptionsPANE.isVisible()) {
-      animationExecuter(Animator.NUDGE, gameOptionsPANE, goButtonPANE);
-    } else {
-      startNewGame();
-    }
-  }
-
-  private void validateNewGame() {
-    animationActivator(true, gridBORDERPANE, movesPANE);
-    isActive.setValue(false);
-    closeCurrentGame();
-  }
-
-  private void closeCurrentGame() {
-    animationActivator(false, peekBORDERPANE, movesPANE, gridBORDERPANE, shuffleButtonPANE,shufflePANE);
-  }
-
-  private void startNewGame() {
-    isActive.set(true);
-  }
-
-
-  /*Inner Services*/
-  private void animationExecuter(Animator animation, Node... nodes) {
-    for (Node node : nodes) {
-      animation.getAnimation().setNode(node);
-      Platform.runLater(() ->
-          animation.getAnimation().play()
-      );
-    }
-  }
-
-  private void animationActivator(boolean show, Node... nodes) {
-    for (Node node : nodes) {
-      Platform.runLater(() -> {
-        if (show) {
-          nodesAnimations.get(node).show();
-        } else {
-          nodesAnimations.get(node).hide();
-        }
-      });
-    }
-  }
-
-  private void setVisibility(boolean visible, Node... nodes) {
-    for (Node node : nodes) {
-      if (node.isVisible() != visible) {
-        if (visible) {
-          node.setVisible(true);
-        }
-        animationActivator(visible, node);
-      }
-    }
-  }
-
-  private WritableImage getOptimizedImage(Image image) {
-    System.out.println("W: " + image.getWidth() + " h: " + image.getHeight());
-
-    double w = image.getWidth(), h = image.getHeight();
-
-    image = w < h ? new Image(image.getUrl(), 400, 0, true, true)
-        : new Image(image.getUrl(), 0, 400, true, true);
-    w = (image.getWidth() - 400) / 2;
-    h = (image.getHeight() - 400) / 2;
-
-    System.out.println("W: " + image.getWidth() + " h: " + image.getHeight());
-
-    PixelReader reader = image.getPixelReader();
-    return new WritableImage(reader, (int) w, (int) h, 400, 400);
-  }
-
-  private void validateInput(Observable observable, String oldText, String newText) {
-    if (!newText.isEmpty()) {
-      for (int i = newText.length() - 1; i >= 0; i--) {
-        if (!((newText.charAt(i)) <= '9' && (newText.charAt(i)) >= '0')) {
-          ((StringProperty) observable).setValue(oldText);
-          return;
-        }
-      }
-    }
-  }
-
 }

@@ -23,7 +23,8 @@ public abstract class TilesBuilding {
   // are based on the String entered. After the ship is made
   // we execute multiple methods in the Tile Object
 
-  public ArrayList<Tile> orderTiles(int requestedGridSize, TileClassification tilesClassification) {
+  public ArrayList<? extends Tile> orderTiles(int requestedGridSize,
+      TileClassification tilesClassification) {
 
     TileFactory.resetFactory(requestedGridSize);
     tilesList = new ArrayList<>();

@@ -4,18 +4,21 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for the game's logic.
+ */
 public class GameModel {
 
   private final int boardSize;
   private Tile[][] tileBoard;
   private Tile blankTile;
-  private List<Tile> tilesList;
+  private List<? extends Tile> tilesList;
 
   /**
    * @param boardSize is the size of one dimension of the array.
    * @param tilesList is a list containing all the tiles.
    */
-  public GameModel(int boardSize, ArrayList<Tile> tilesList) {
+  public GameModel(int boardSize, ArrayList<? extends Tile> tilesList) {
     this.boardSize = boardSize;
     this.tilesList = tilesList;
     this.tileBoard = new Tile[boardSize][boardSize];
@@ -26,16 +29,22 @@ public class GameModel {
   }
 
   /**
+   * Checks if move is legal and swaps places.
+   *
    * @param tile is the tile to be moved.
-   * @return false if move is illegal else: slides the tile to the empty space and return true.
+   * @return false if move is illegal else true.
    */
   public boolean move(Tile tile) {
     if (!isLegalMove(tile)) {
       return false;
     }
-    tileBoard[tile.getCoordinates().getRow()][tile.getCoordinates().getCol()] = blankTile;
-    tileBoard[blankTile.getCoordinates().getRow()][blankTile.getCoordinates().getCol()] = tile;
-    blankTile.swapWith(tile);
+
+    tile.swapWith(blankTile);
+    /*TODO: check if the opposite works*/
+    // tileBoard[tile.getCoordinates().getRow()][tile.getCoordinates().getCol()] = blankTile;
+    // tileBoard[blankTile.getCoordinates().getRow()][blankTile.getCoordinates().getCol()] = tile;
+    tileBoard[blankTile.getCoordinates().getRow()][blankTile.getCoordinates().getCol()] = blankTile;
+    tileBoard[tile.getCoordinates().getRow()][tile.getCoordinates().getCol()] = tile;
     return true;
   }
 
@@ -61,7 +70,7 @@ public class GameModel {
    *
    * @return false if at least one tile is not, else returns.
    */
-  boolean isDone() {
+  public boolean isDone() {
     for (Tile tile : tilesList) {
       if (!tile.isInRightPosition()) {
         return false;

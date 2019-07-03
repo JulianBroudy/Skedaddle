@@ -1,9 +1,14 @@
 package model.service.factory;
 
+import controller.GameState;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.Coordinates;
 import model.Tile;
@@ -11,7 +16,42 @@ import model.tiles.FXTile;
 
 public abstract class FXTileFactory extends TileFactory {
 
-  ShapeFactory shapeFactory = new ShapeFactory(requestedGridSize);
+  private static DoubleProperty requestedTileSize;
+  private static double DEFAULT_GRID_LENGTH = 400;
+  // Is DoubleProperty in case the grid size changes in future updates.
+  private static DoubleProperty gridLengthInPixels;
+
+  static {
+    gridLengthInPixels = new SimpleDoubleProperty(DEFAULT_GRID_LENGTH);
+    requestedTileSize = new SimpleDoubleProperty();
+    requestedTileSize.bind(gridLengthInPixels.divide(GameState.gridSizeProperty()));
+  }
+
+  ShapeFactory shapeFactory = new ShapeFactory();
+
+  public static double getRequestedTileSize() {
+    return requestedTileSize.get();
+  }
+
+  public static void setRequestedTileSize(double requestedTileSize) {
+    FXTileFactory.requestedTileSize.set(requestedTileSize);
+  }
+
+  public static DoubleProperty requestedTileSizeProperty() {
+    return requestedTileSize;
+  }
+
+  public static double getGridLengthInPixels() {
+    return gridLengthInPixels.get();
+  }
+
+  public static void setGridLengthInPixels(double gridLengthInPixels) {
+    FXTileFactory.gridLengthInPixels.set(gridLengthInPixels);
+  }
+
+  public static DoubleProperty gridLengthInPixelsProperty() {
+    return gridLengthInPixels;
+  }
 
   public Shape createShape(TileShape tileShape, Coordinates coordinates) {
     switch (tileShape) {
@@ -25,7 +65,10 @@ public abstract class FXTileFactory extends TileFactory {
   }
 
   public Text createText(String id) {
-    return null;
+    Text text = new Text(id);
+    text.setFont(Font.font(requestedTileSize.get() / 2));
+    text.setFill(Color.WHITE);
+    return text;
   }
 
   public void bla(ObservableList<Node> children, Tile tile) {
@@ -49,16 +92,10 @@ public abstract class FXTileFactory extends TileFactory {
 
   class ShapeFactory {
 
-    int size;
-
-    public ShapeFactory(int requestedGridSize) {
-      this.size = 400 / requestedGridSize;
-    }
-
     Rectangle newRectangle(int row, int col) {
-      Rectangle tmp = new Rectangle(size - 4, size - 4);
-      tmp.setArcHeight(size / 10);
-      tmp.setArcWidth(size / 10);
+      Rectangle tmp = new Rectangle(requestedTileSize.get() - 4, requestedTileSize.get() - 4);
+      tmp.setArcHeight(requestedTileSize.get() / 10);
+      tmp.setArcWidth(requestedTileSize.get() / 10);
       return tmp;
     }
 

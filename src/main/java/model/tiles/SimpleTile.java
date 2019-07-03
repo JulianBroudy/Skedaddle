@@ -79,7 +79,7 @@ public class SimpleTile implements Tile {
 
   @Override
   public boolean isInRightPosition() {
-    return (currentCoordinates.areTheSameAs(initialCoordinates));
+    return (currentCoordinates.equals(initialCoordinates));
   }
 
   @Override

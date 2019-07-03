@@ -1,6 +1,6 @@
 package model.service;
 
-import javafx.animation.PauseTransition;
+import javafx.animation.Animation;
 import javafx.scene.Node;
 
 public class NodeAnimator {
@@ -8,22 +8,37 @@ public class NodeAnimator {
   private Node node;
   private Animator showNode, hideNode;
 
-  public NodeAnimator(Node node, Animator showNode,
-      Animator hideNode) {
+  protected NodeAnimator(Node node) {
     this.node = node;
+  }
+
+  public NodeAnimator(Node node, Animator showNode, Animator hideNode) {
+    this(node);
     this.showNode = showNode;
     this.hideNode = hideNode;
-    showNode.getAnimation().setNode(node);
-    hideNode.getAnimation().setNode(node);
+    initializeAnimations(showNode, hideNode);
     hideNode.getAnimation().setOnFinished(e -> node.setVisible(false));
   }
 
-  public void show() {
+  protected void initializeAnimations(Animator... animations) {
+    for (Animator animation : animations) {
+      animation.getAnimation().setNode(node);
+      animation.getAnimation().setOnFinished(e -> node.setVisible(true));
+    }
+  }
+
+  public synchronized void show() {
+    if (hideNode.getAnimation().getStatus() == Animation.Status.RUNNING) {
+      hideNode.getAnimation().stop();
+    }
     node.setVisible(true);
     showNode.getAnimation().play();
   }
 
-  public void hide() {
+  public synchronized void hide() {
+    if (showNode.getAnimation().getStatus() == Animation.Status.RUNNING) {
+      showNode.getAnimation().stop();
+    }
     hideNode.getAnimation().play();
   }
 

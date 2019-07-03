@@ -17,9 +17,9 @@ public class SimpleTilesBuilding extends TilesBuilding {
 
     Tile theTile;
 
-    // If UFO was sent grab use the factory that knows
-    // what types of weapons and engines a regular UFO
-    // needs. The Tile object is returned & given a name
+    // If Tile was sent grab use the factory that knows
+    // what types of weapons and engines a regular SimpleTile
+    // needs. The Tile object is returned.
 
         TileFactory tilePartsFactory = new SimpleTileFactory();
         theTile = new SimpleTile(tilePartsFactory);

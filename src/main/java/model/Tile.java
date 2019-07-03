@@ -17,7 +17,7 @@ public interface Tile {
     tileFactory.assignCoordinatesTo(this);
     tileFactory.setType(this);
     System.out.println(getID() + "\tType: " + getType());
-    tileFactory.updateStock();
+    TileFactory.updateStock();
   }
 
   void assembleTile();
@@ -43,6 +43,6 @@ public interface Tile {
 
   boolean isInRightPosition();
 
-  void swapWith(Tile tile);
+  void swapWith(Tile emptyTile);
 
 }

@@ -1,32 +1,21 @@
 package controller;
 
-import java.util.ArrayList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import model.GameModel;
-import model.Tile;
-import model.service.builders.FXTilesBuilding;
-import model.service.factory.FXTileFactory.TileShape;
-import model.service.factory.TileFactory.TileClassification;
 
-public class GameController {
+public class GameState {
 
   private static BooleanProperty isActive;
   private static IntegerProperty gridSize;
   private static IntegerProperty currentMoves;
   private static GameMode mode;
-  private static GameModel gameModel;
-  private static FXTilesBuilding tilesBuilder;
-  private static ArrayList<Tile> tiles;
 
   static {
-    GameController.tilesBuilder = new FXTilesBuilding();
-    GameController.isActive = new SimpleBooleanProperty();
-    GameController.setIsActive(false);
-    GameController.gridSize = new SimpleIntegerProperty();
-    GameController.currentMoves = new SimpleIntegerProperty();
+    GameState.isActive = new SimpleBooleanProperty(false);
+    GameState.gridSize = new SimpleIntegerProperty(3);
+    GameState.currentMoves = new SimpleIntegerProperty();
   }
 
   public static boolean isActive() {
@@ -34,7 +23,7 @@ public class GameController {
   }
 
   public static void setIsActive(boolean isActive) {
-    GameController.isActive.set(isActive);
+    GameState.isActive.set(isActive);
   }
 
   public static BooleanProperty isActiveProperty() {
@@ -46,7 +35,7 @@ public class GameController {
   }
 
   public static void setGridSize(int gridSize) {
-    GameController.gridSize.set(gridSize);
+    GameState.gridSize.set(gridSize);
   }
 
   public static IntegerProperty gridSizeProperty() {
@@ -58,7 +47,7 @@ public class GameController {
   }
 
   public static void setCurrentMoves(int currentMoves) {
-    GameController.currentMoves.set(currentMoves);
+    GameState.currentMoves.set(currentMoves);
   }
 
   public static IntegerProperty currentMovesProperty() {
@@ -70,15 +59,7 @@ public class GameController {
   }
 
   public static void setMode(GameMode mode) {
-    GameController.mode = mode;
-  }
-
-  public static void startNewGame() {
-//    check Game Mode
-    GameController.tilesBuilder.setTilesShape(TileShape.SQUARE);
-    GameController.tiles = tilesBuilder
-        .orderTiles(GameController.getGridSize(), TileClassification.SOLID);
-    GameController.gameModel = new GameModel(GameController.getGridSize(), tiles);
+    GameState.mode = mode;
   }
 
   public static void shuffleBoard(int i) {
@@ -86,6 +67,6 @@ public class GameController {
   }
 
   public enum GameMode {
-    NORMAL, PICTURE;
+    NORMAL, PICTURE
   }
 }
