@@ -22,7 +22,7 @@ public class SolidFXTile extends FXTile {
         shape.getStyleClass().clear();
         shape.getStyleClass().add("tile-hover");
       } else {
-        isInRightPosition();
+        alterPosition();
       }
     });
     shape.setStrokeWidth(-1);
@@ -34,13 +34,6 @@ public class SolidFXTile extends FXTile {
     // ((Rectangle) shape).setArcWidth(FXTileFactory.requestedTileSize.get() / 10);
   }
 
-  @Override
-  public boolean isInRightPosition() {
-    boolean rightPosition = super.isInRightPosition();
 
-    shape.getStyleClass().clear();
-    shape.getStyleClass().add((rightPosition) ? "right-pos-tile" : "wrong-pos-tile");
 
-    return (rightPosition);
-  }
 }

@@ -49,7 +49,7 @@ public class GameModel {
   }
 
   /**
-   * checks if the tile can be moved to an empty space (i.e. up,down,left,right). #isLegalMove
+   * Checks if the tile can be moved to an empty space (i.e. up,down,left,right). #isLegalMove
    *
    * @param tile is the tile to be checked.
    * @return true if tile can be moved, else returns false.
@@ -68,9 +68,9 @@ public class GameModel {
   /**
    * checks if all tiles are back to their original coordinates.
    *
-   * @return false if at least one tile is not, else returns.
+   * @return false if at least one tile is not, else returns true.
    */
-  public boolean isDone() {
+  public boolean isSolved() {
     for (Tile tile : tilesList) {
       if (!tile.isInRightPosition()) {
         return false;
@@ -92,7 +92,6 @@ public class GameModel {
   public void setBlankTile(Tile tile) {
     //TODO: delete this?
     this.blankTile = tile;
-
   }
 
   public void printBoard() {
@@ -115,11 +114,11 @@ public class GameModel {
   }
 
   /**
-   * acts as a list of possible moves.
+   * Acts as a list of legal moves.
    *
-   * @see #isLegalMove
+   * {@see #isLegalMove}
    */
-  enum LegalMoves {
+  public enum LegalMoves {
 
     up(-1, 0), down(1, 0), left(0, -1), right(0, 1);
 
@@ -131,11 +130,11 @@ public class GameModel {
       this.col = col;
     }
 
-    int getRow() {
+    public int getRow() {
       return row;
     }
 
-    int getCol() {
+    public int getCol() {
       return col;
     }
 

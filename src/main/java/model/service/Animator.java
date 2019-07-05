@@ -100,10 +100,12 @@ public enum Animator {
       new Shake()
   ), SHOW_SHUFFLEPANE(TransitionsGenerator.generateParallelTransition(
       TransitionsGenerator.generateTranslateTransition(0.5, XorY.X, 0, 0),
-      TransitionsGenerator.generateFadeTransition(1, 1))), HIDE_SHUFFLEPANE(
+      TransitionsGenerator.generateFadeTransition(1, 1))),
+  HIDE_SHUFFLEPANE(
       TransitionsGenerator.generateParallelTransition(
           TransitionsGenerator.generateTranslateTransition(0.2, XorY.X, -210, 0),
-          TransitionsGenerator.generateFadeTransition(0.2, 0))), JELLO(new Jello());
+          TransitionsGenerator.generateFadeTransition(0.2, 0))),
+  JELLO(new Jello());
 
   AnimationUnifier animation;
 

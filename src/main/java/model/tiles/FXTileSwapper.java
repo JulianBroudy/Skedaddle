@@ -1,5 +1,6 @@
 package model.tiles;
 
+import animatefx.animation.RubberBand;
 import java.util.ArrayList;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
@@ -30,9 +31,9 @@ public class FXTileSwapper implements Runnable {
 
   @Override
   public void run() {
-    order.add(myNumber);
-    order.sort(Integer::compareTo);
     synchronized (aLock) {
+      order.add(myNumber);
+      order.sort(Integer::compareTo);
       while (!order.get(0).equals(myNumber)) {
         logger.traceEntry("ID: " + myNumber + " - I'm gonna wait.");
         try {
@@ -59,12 +60,19 @@ public class FXTileSwapper implements Runnable {
           handler -> {
             synchronized (aLock) {
               logger.traceEntry("ID: " + myNumber + " - the animation just finished.");
+              thisTile.getCoordinates().swapWith(thatTile.getCoordinates());
+              if (thisTile.isInRightPosition()) {
+                RubberBand rightPositionEffect = new RubberBand(thisTile);
+                rightPositionEffect.setOnFinished(handle -> thisTile.alterPosition());
+                rightPositionEffect.play();
+              } else {
+                thisTile.alterPosition();
+              }
               order.remove(myNumber);
               order.sort(Integer::compareTo);
-              thisTile.isInRightPosition();
               logger.traceEntry(
                   "ID: " + myNumber + " - removed myself from queue, notifying others...");
-              aLock.notify();
+              aLock.notifyAll();
             }
           });
       parallelTransition.play();

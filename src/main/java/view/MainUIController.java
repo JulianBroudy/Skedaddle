@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -103,13 +104,15 @@ public class MainUIController {
   private BorderPane peekBORDERPANE;
   private Group tilesGroup;
   private Group peekGroup;
-  private RegexValidator gridSizeValidator;
   private ConcurrentHashMap<Node, NodeAnimator> nodesAnimations;
   private BooleanProperty isActive;
   private Image initialImage;
   private Image uploadedPic;
   private GamePlayManager gamePlayManager;
   private FileChooser fileChooser = new FileChooser();
+  private RegexValidator gridSizeValidator;
+  private RegexValidator numberOfShufflesValidator;
+  private IntegerBinding numberOfShuffles;
 
   @FXML
   private void initialize() {
@@ -125,12 +128,18 @@ public class MainUIController {
 
     // Initialize needed variables
     isActive = new SimpleBooleanProperty();
-    gridSizeValidator = new RegexValidator("3-18");
-    gridSizeValidator.setRegexPattern("(^$)|([1-9]|1[0-8])");
-    gridSizeTF.getValidators().add(gridSizeValidator);
+
     fileChooser.setTitle("Upload an image");
     fileChooser.getExtensionFilters().add(new ExtensionFilter("Image Files", "*.png", "*.jpg"));
     initialImage = optimizeImage(new Image("images/cat.jpg", 400, 400, true, true));
+
+    // Initialize TextFields' validators
+    gridSizeValidator = new RegexValidator("3-18");
+    gridSizeValidator.setRegexPattern("(^$)|([1-9]|1[0-8])");
+    gridSizeTF.getValidators().add(gridSizeValidator);
+    numberOfShufflesValidator = new RegexValidator("Currently 1000 is the max!");
+    numberOfShufflesValidator.setRegexPattern("^([1-9][0-9]{0,2}|1000)$");
+    shufflesTF.getValidators().add(numberOfShufflesValidator);
 
     // Initialize tiles holders
     tilesGroup = new Group();
@@ -162,11 +171,12 @@ public class MainUIController {
 
     GameState.gridSizeProperty().bind(Bindings.createIntegerBinding(
         () -> gridSizeTF.getText().isEmpty() ? Integer.parseInt(gridSizeTF.getPromptText())
-            : Integer.parseInt(gridSizeTF.getText()), gridSizeTF.textProperty())
-    );
+            : Integer.parseInt(gridSizeTF.getText()), gridSizeTF.textProperty()));
 
-    // gridSizeTF.promptTextProperty()
-    //     .bindBidirectional(GameState.gridSizeProperty(), new NumberStringConverter());
+    numberOfShuffles = Bindings.createIntegerBinding(
+        () -> shufflesTF.getText().isEmpty() ? Integer.parseInt(shufflesTF.getPromptText())
+            : Integer.parseInt(shufflesTF.getText()), shufflesTF.textProperty());
+
     movesLABEL.textProperty().bind(GameState.currentMovesProperty().asString());
 
     logger.traceExit("done with bindings.");
@@ -224,6 +234,9 @@ public class MainUIController {
     peekBUTTON.setOnAction(handle -> setVisibility(!peekBORDERPANE.isVisible(), peekBORDERPANE));
 
     shuffleBUTTON.setOnAction(handle -> setVisibility(!shufflePANE.isVisible(), shufflePANE));
+
+    doItBUTTON.setOnAction(
+        handle -> gamePlayManager.shuffleBoard(numberOfShuffles.get()));
 
     exitBUTTON.setOnAction(handle -> System.exit(0));
 

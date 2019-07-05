@@ -37,9 +37,6 @@ public class Coordinates {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
     if (!(o instanceof Coordinates)) {
       return false;
     }
@@ -57,4 +54,6 @@ public class Coordinates {
   public String toString() {
     return "Coordinates - \tRow: " + row + "\tCol: " + col;
   }
+
+
 }
