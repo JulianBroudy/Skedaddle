@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import model.GameModel;
 import model.service.AnimationUnifier;
 import model.service.Animator;
@@ -14,27 +15,60 @@ import view.MainUIController;
 public class GamePlayManager {
 
   private static GamePlayManager onlyInstance = new GamePlayManager();
-  private static GameModel gameModel;
-  private static FXTilesBuilding tilesBuilder;
-  private static ArrayList<FXTile> tiles;
-  private static MainUIController mainUIController = null;
+  private Task<ArrayList<FXTile>> tilesOrderTask;
+  private Task<Void> boardInitializingTask;
+  private Runnable orderTiles, initializeGame;
+
+  private GameModel gameModel;
+  private FXTilesBuilding tilesBuilder;
+  private ArrayList<FXTile> tiles;
+  private MainUIController mainUIController = null;
 
   private GamePlayManager() {
     tilesBuilder = new FXTilesBuilding();
     initializeListeners();
-
+    initializeTasks();
   }
 
   public static GamePlayManager getInstance() {
     return onlyInstance;
   }
 
-  public static void startNewGame() {
+  private void initializeTasks() {
+
+    // Service<ArrayList<FXTile>>
+
+    /*tilesOrderTask = new Task<>() {
+      @Override
+      protected ArrayList<FXTile> call() {
+        return (ArrayList<FXTile>) tilesBuilder
+            .orderTiles(GameState.getGridSize(), TileClassification.SOLID);
+      }
+    };
+    tilesOrderTask.setOnSucceeded(event -> {
+      tiles = (ArrayList<FXTile>) event.getSource().getValue();
+    });
+
+    boardInitializingTask = new Task<Void>() {
+      @Override
+      protected Void call() {
+        gameModel = new GameModel(GameState.getGridSize(), tiles);
+        return null;
+      }
+    };*/
+
+  }
+
+  public void startNewGame() {
     tilesBuilder.setTilesShape(TileShape.SQUARE);
-    // int gridSize = GameState.getGridSize() == 0 ? 8 : GameState.getGridSize();
+
     tiles = (ArrayList<FXTile>) tilesBuilder
         .orderTiles(GameState.getGridSize(), TileClassification.SOLID);
+
     gameModel = new GameModel(GameState.getGridSize(), tiles);
+
+    // new Thread(tilesOrderTask).start();
+    // new Thread(boardInitializingTask).start();
 
     FXTile emptyTile = (FXTile) gameModel.getBlankTile();
     emptyTile.setVisible(false);
@@ -52,7 +86,8 @@ public class GamePlayManager {
       });
     }
     Platform.runLater(() -> {
-      // mainUIController.loadSolution(); TODO: generate solution tiles?!
+      mainUIController.loadSolution((ArrayList<FXTile>) tilesBuilder
+          .orderTiles(GameState.getGridSize(), TileClassification.SOLID));
       mainUIController.loadBoard(tiles);
     });
   }
@@ -66,7 +101,7 @@ public class GamePlayManager {
   }
 
   public void setMainUIController(MainUIController mainUIController) {
-    GamePlayManager.mainUIController = mainUIController;
+    this.mainUIController = mainUIController;
   }
 
 }

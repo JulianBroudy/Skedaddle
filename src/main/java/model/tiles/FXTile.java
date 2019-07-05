@@ -1,6 +1,5 @@
 package model.tiles;
 
-import javafx.animation.PathTransition;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
@@ -10,11 +9,13 @@ import model.service.factory.FXTileFactory;
 import model.service.factory.FXTileFactory.TileShape;
 import model.service.factory.TileFactory;
 import model.service.factory.TileFactory.TileClassification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class FXTile extends StackPane implements Tile {
 
-  private static PathTransition pathTransition = new PathTransition();
-  // private static boolean isSwapping;
+  private static final Logger logger = LogManager.getLogger(Tile.class);
+
   private final TileFactory tileFactory;
   private final Coordinates initialCoordinates, currentCoordinates;
   protected Text text;
@@ -30,6 +31,7 @@ public abstract class FXTile extends StackPane implements Tile {
   }
 
   public void assembleFXTileBase() {
+    logger.traceEntry("assembling FXTileBase");
     assembleTileBase(tileFactory);
     FXTileFactory fxFactory = (FXTileFactory) tileFactory;
     text = fxFactory.createText(getID());
@@ -38,6 +40,7 @@ public abstract class FXTile extends StackPane implements Tile {
     getChildren().add(text);
     setTranslateX(getCoordinates().getCol() * FXTileFactory.getRequestedTileSize());
     setTranslateY(getCoordinates().getRow() * FXTileFactory.getRequestedTileSize());
+    logger.traceExit("done assembling FXTileBase");
   }
 
   @Override
@@ -113,7 +116,9 @@ public abstract class FXTile extends StackPane implements Tile {
     // FXTileSwapper swapper = new FXTileSwapper(this, (FXTile) tile);
     // Thread swapperThread = new Thread(swapper);
     // swapperThread.start();
+
     getCoordinates().swapWith(tile.getCoordinates());
+
     FXTileSwapper swapper = new FXTileSwapper(this, (FXTile) tile);
     Thread swapperThread = new Thread(swapper);
     swapperThread.start();

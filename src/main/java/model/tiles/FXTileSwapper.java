@@ -20,29 +20,29 @@ public class FXTileSwapper implements Runnable {
 
 
   public FXTileSwapper(FXTile thisTile, FXTile thatTile) {
-    logger.traceEntry(thisTile.getID());
+    myNumber = counter++;
+    logger.traceEntry(
+        "ID: " + myNumber + " - swapping tile number " + thisTile.getID() + " with tile number "
+            + thatTile.getID());
     this.thisTile = thisTile;
     this.thatTile = thatTile;
-    myNumber = counter++;
   }
 
   @Override
   public void run() {
-    logger.traceEntry(myNumber.toString());
     order.add(myNumber);
     order.sort(Integer::compareTo);
     synchronized (aLock) {
-      logger.traceEntry(myNumber + "in synchronized.");
       while (!order.get(0).equals(myNumber)) {
+        logger.traceEntry("ID: " + myNumber + " - I'm gonna wait.");
         try {
-          logger.traceEntry(myNumber + "waiting...");
           aLock.wait();
         } catch (InterruptedException e) {
           logger.error(e);
           e.printStackTrace();
         }
       }
-
+      logger.traceEntry("ID: " + myNumber + " - I'm in! creating transitions...");
       TranslateTransition swapThisTileWithThatTile = TransitionsGenerator
           .generateTranslateTransition(0.4, XorY.BOTH, thatTile.getTranslateX(),
               thatTile.getTranslateY());
@@ -57,15 +57,14 @@ public class FXTileSwapper implements Runnable {
           .generateParallelTransition(swapThisTileWithThatTile, swapThatTileWithThisTile);
       parallelTransition.setOnFinished(
           handler -> {
-            logger.traceEntry();
             synchronized (aLock) {
-              logger.traceEntry("myID:" + Thread.currentThread().getId() + myNumber
-                  + " in synchronized of OnFinished handler.");
+              logger.traceEntry("ID: " + myNumber + " - the animation just finished.");
               order.remove(myNumber);
               order.sort(Integer::compareTo);
               thisTile.isInRightPosition();
-              logger.traceEntry(myNumber + " handled OnFinished, notifying others.");
-              aLock.notifyAll();
+              logger.traceEntry(
+                  "ID: " + myNumber + " - removed myself from queue, notifying others...");
+              aLock.notify();
             }
           });
       parallelTransition.play();

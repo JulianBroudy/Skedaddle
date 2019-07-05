@@ -1,13 +1,15 @@
 package model.service.builders;
 
 import java.util.ArrayList;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import model.Tile;
 import model.service.factory.TileFactory;
 import model.service.factory.TileFactory.TileClassification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public abstract class TilesBuilding {
+public abstract class TilesBuilding extends Service {
 
   private final static Logger logger = LogManager.getLogger(TilesBuilding.class);
 
@@ -42,6 +44,10 @@ public abstract class TilesBuilding {
       tilesList.add(theTile);
     }
     return tilesList;
+  }
 
+  @Override
+  protected Task createTask() {
+    return null;
   }
 }

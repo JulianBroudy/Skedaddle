@@ -2,6 +2,8 @@ package model;
 
 import model.service.factory.TileFactory;
 import model.service.factory.TileFactory.TileClassification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public interface Tile {
 
@@ -9,15 +11,15 @@ public interface Tile {
   // These can be changed easily by assigning new values
   // in PictureTileFactory or SolidTileFactory
 //  TODO: check comment
-
+  Logger logger = LogManager.getLogger(Tile.class);
 
   default void assembleTileBase(TileFactory tileFactory) {
-    System.out.print("Assembling tile: ");
+    logger.traceEntry("assembling " + getType() + " tile base...");
     tileFactory.generateIDFor(this);
     tileFactory.assignCoordinatesTo(this);
     tileFactory.setType(this);
-    System.out.println(getID() + "\tType: " + getType());
     TileFactory.updateStock();
+    logger.traceExit("assembled tile base - ID: " + getID());
   }
 
   void assembleTile();
