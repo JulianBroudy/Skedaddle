@@ -4,6 +4,8 @@ import animatefx.animation.RubberBand;
 import java.util.ArrayList;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
@@ -25,7 +27,8 @@ public abstract class FXTile extends StackPane implements Tile {
   private static ArrayList<Integer> order = new ArrayList<>();
   private static Integer counter = 0;
   private final TileFactory tileFactory;
-  private final Coordinates initialCoordinates, currentCoordinates;
+  private final Coordinates initialCoordinates;
+  private final ObjectProperty<Coordinates> currentCoordinates;
   protected Text text;
   protected Shape shape;
   private String id = "John Doe";
@@ -40,7 +43,7 @@ public abstract class FXTile extends StackPane implements Tile {
   public FXTile(TileFactory tileFactory) {
     this.tileFactory = tileFactory;
     initialCoordinates = new Coordinates(0, 0);
-    currentCoordinates = new Coordinates(0, 0);
+    currentCoordinates = new SimpleObjectProperty<>(new Coordinates(0, 0));
   }
 
   public void assembleFXTileBase() {
@@ -53,6 +56,14 @@ public abstract class FXTile extends StackPane implements Tile {
     getChildren().add(text);
     setTranslateX(getCoordinates().getCol() * FXTileFactory.getRequestedTileSize());
     setTranslateY(getCoordinates().getRow() * FXTileFactory.getRequestedTileSize());
+
+    currentCoordinates.addListener((observable, oldValue, newValue) -> {
+      double fromX = FXTileFactory.getRequestedTileSize() * oldValue.getCol();
+      double fromY = FXTileFactory.getRequestedTileSize() * oldValue.getRow();
+      double toX = FXTileFactory.getRequestedTileSize() * newValue.getCol();
+      double toY = FXTileFactory.getRequestedTileSize() * newValue.getRow();
+
+    });
     logger.traceExit("done assembling FXTileBase");
   }
 
@@ -95,7 +106,7 @@ public abstract class FXTile extends StackPane implements Tile {
 
   @Override
   public Coordinates getCoordinates() {
-    return currentCoordinates;
+    return currentCoordinates.get();
   }
 
 //
@@ -285,8 +296,8 @@ public abstract class FXTile extends StackPane implements Tile {
 
   @Override
   public void setCoordinates(Coordinates newCoordinates) {
-    currentCoordinates.setRow(newCoordinates.getRow());
-    currentCoordinates.setCol(newCoordinates.getCol());
+    currentCoordinates.get().setRow(newCoordinates.getRow());
+    currentCoordinates.get().setCol(newCoordinates.getCol());
   }
 
   @Override
