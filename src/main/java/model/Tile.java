@@ -32,8 +32,6 @@ public interface Tile {
 
   void setID(String id);
 
-  void alterPosition();
-
   Coordinates getCoordinates();
 
 

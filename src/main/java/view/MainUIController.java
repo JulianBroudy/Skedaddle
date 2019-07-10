@@ -16,6 +16,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -106,8 +107,8 @@ public class MainUIController {
   private Group peekGroup;
   private ConcurrentHashMap<Node, NodeAnimator> nodesAnimations;
   private BooleanProperty isActive;
-  private Image initialImage;
-  private Image uploadedPic;
+  private ObjectProperty<Image> initialImage;
+  private ObjectProperty<Image> uploadedPic;
   private GamePlayManager gamePlayManager;
   private FileChooser fileChooser = new FileChooser();
   private RegexValidator gridSizeValidator;
@@ -235,8 +236,8 @@ public class MainUIController {
 
     shuffleBUTTON.setOnAction(handle -> setVisibility(!shufflePANE.isVisible(), shufflePANE));
 
-    doItBUTTON.setOnAction(
-        handle -> gamePlayManager.shuffleBoard(numberOfShuffles.get()));
+    // TODO: restrict shuffling number to more than 5
+    doItBUTTON.setOnAction(handle -> gamePlayManager.shuffleBoard(numberOfShuffles.get()));
 
     exitBUTTON.setOnAction(handle -> System.exit(0));
 
@@ -258,10 +259,11 @@ public class MainUIController {
         PauseTransition pause = TransitionsGenerator.generaPauseTransition(0.3, doThis -> {
           picModeTGL.setSelected(false);
           picUploadTGL.setSelected(false);
+          shufflesTF.clear();
         });
         pause.play();
-        setVisibility(true, exitPANE, movesPANE, gridBORDERPANE, shuffleButtonPANE, peekPANE,
-            peekBORDERPANE);
+        setVisibility(true, exitPANE, movesPANE, gridBORDERPANE, shuffleButtonPANE, peekPANE);
+
       } else {
         setVisibility(false, exitPANE, movesPANE, gridBORDERPANE, shuffleButtonPANE, peekPANE);
         setVisibility(true, gameOptionsPANE, goButtonPANE);
@@ -382,7 +384,7 @@ public class MainUIController {
    * @param image to be optimized.
    * @return {@see WritableImage} 400 width 400 height.
    */
-  private WritableImage optimizeImage(Image image) {
+  private ObjectProperty<Image> optimizeImage(ObjectProperty<Image> image) {
     System.out.println("W: " + image.getWidth() + " h: " + image.getHeight());
 
     double w = image.getWidth(), h = image.getHeight();

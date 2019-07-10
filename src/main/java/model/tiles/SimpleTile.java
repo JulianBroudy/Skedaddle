@@ -56,11 +56,6 @@ public class SimpleTile implements Tile {
   }
 
   @Override
-  public void alterPosition() {
-
-  }
-
-  @Override
   public Coordinates getCoordinates() {
     return currentCoordinates;
   }

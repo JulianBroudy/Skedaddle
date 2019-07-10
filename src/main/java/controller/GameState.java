@@ -2,6 +2,7 @@ package controller;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -11,6 +12,7 @@ public class GameState {
   private static IntegerProperty gridSize;
   private static IntegerProperty currentMoves;
   private static GameMode mode;
+  private static ObjectProperty<>
 
   static {
     GameState.isActive = new SimpleBooleanProperty(false);

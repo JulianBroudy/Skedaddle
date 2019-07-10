@@ -9,9 +9,13 @@ package model.service.factory;
 
 // The returned object specifies a specific weapon & engine
 
+import controller.GameState;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.ImageView;
+import model.Coordinates;
 import model.Tile;
 
-public class PictureTileFactory extends TileFactory {
+public class PictureTileFactory extends FXTileFactory {
 
 
   public Tile addShape() {
@@ -28,10 +32,19 @@ public class PictureTileFactory extends TileFactory {
 //    return new TileStyle(this); // Specific to regular UFO
   }
 
-  public Tile addPicture() {
+  public Tile addPicture(Coordinates tilesInitialCoordinates) {
+
+    ImageView picView = new ImageView(GameState.);
+
+    Rectangle2D rect = new Rectangle2D(getRequestedTileSize() * tilesInitialCoordinates.getCol(),
+        getRequestedTileSize() * tilesInitialCoordinates.getRow(), getRequestedTileSize() - 3,
+        getRequestedTileSize() - 3);
+    picView.setViewport(rect);
+
     System.out.println("return new TilePictureView(this);");
     return null;
 //    return new TilePictureView(this); // Specific to regular UFO
   }
+
 
 }

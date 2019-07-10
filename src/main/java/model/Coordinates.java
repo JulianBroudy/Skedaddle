@@ -28,11 +28,11 @@ public class Coordinates {
   }
 
   public void swapWith(Coordinates these) {
-    Coordinates tmp = new Coordinates(these.getRow(), these.getCol());
+    Coordinates newCoordinates = new Coordinates(these.getRow(), these.getCol());
     these.setRow(getRow());
     these.setCol(getCol());
-    this.setRow(tmp.getRow());
-    this.setCol(tmp.getCol());
+    this.setRow(newCoordinates.getRow());
+    this.setCol(newCoordinates.getCol());
   }
 
   @Override

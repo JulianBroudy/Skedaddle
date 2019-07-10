@@ -3,7 +3,6 @@ package model.service.factory;
 import controller.GameState;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -11,8 +10,6 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.Coordinates;
-import model.Tile;
-import model.tiles.FXTile;
 
 public abstract class FXTileFactory extends TileFactory {
 
@@ -33,24 +30,24 @@ public abstract class FXTileFactory extends TileFactory {
     return requestedTileSize.get();
   }
 
-  public static DoubleProperty requestedTileSizeProperty() {
-    return requestedTileSize;
-  }
-
   public static void setRequestedTileSize(double requestedTileSize) {
     FXTileFactory.requestedTileSize.set(requestedTileSize);
+  }
+
+  public static DoubleProperty requestedTileSizeProperty() {
+    return requestedTileSize;
   }
 
   public static double getGridLengthInPixels() {
     return gridLengthInPixels.get();
   }
 
-  public static DoubleProperty gridLengthInPixelsProperty() {
-    return gridLengthInPixels;
-  }
-
   public static void setGridLengthInPixels(double gridLengthInPixels) {
     FXTileFactory.gridLengthInPixels.set(gridLengthInPixels);
+  }
+
+  public static DoubleProperty gridLengthInPixelsProperty() {
+    return gridLengthInPixels;
   }
 
   public Shape createShape(TileShape tileShape, Coordinates coordinates) {
@@ -68,23 +65,25 @@ public abstract class FXTileFactory extends TileFactory {
     Text text = new Text(id);
     text.setFont(Font.font(getRequestedTileSize() / 2));
     text.setFill(Color.WHITE);
+    text.setMouseTransparent(true);
     return text;
   }
-
-  public void bla(ObservableList<Node> children, Tile tile) {
-    switch (((FXTile) tile).getShapeType()) {
-      case SQUARE: {
-        children.add(shapeFactory
-            .newRectangle(tile.getCoordinates().getRow(), tile.getCoordinates().getCol()));
-        break;
-      }
-      case CIRCLE: {
-        children.add(shapeFactory
-            .newCircle(tile.getCoordinates().getRow(), tile.getCoordinates().getCol()));
-        break;
-      }
-    }
-  }
+  //
+  // // TODO: change method name
+  // public void bla(ObservableList<Node> children, Tile tile) {
+  //   switch (((FXTile) tile).getShapeType()) {
+  //     case SQUARE: {
+  //       children.add(shapeFactory
+  //           .newRectangle(tile.getCoordinates().getRow(), tile.getCoordinates().getCol()));
+  //       break;
+  //     }
+  //     case CIRCLE: {
+  //       children.add(shapeFactory
+  //           .newCircle(tile.getCoordinates().getRow(), tile.getCoordinates().getCol()));
+  //       break;
+  //     }
+  //   }
+  // }
 
   public enum TileShape {
     SQUARE, CIRCLE

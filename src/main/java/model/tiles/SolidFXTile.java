@@ -1,8 +1,12 @@
 package model.tiles;
 
+import animatefx.animation.RubberBand;
+import javafx.animation.PauseTransition;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import model.service.factory.FXTileFactory;
 import model.service.factory.FXTileFactory.TileShape;
+import model.service.factory.SolidTileFactory;
 import model.service.factory.TileFactory;
 
 public class SolidFXTile extends FXTile {
@@ -15,25 +19,35 @@ public class SolidFXTile extends FXTile {
   @Override
   public void assembleTile() {
     assembleFXTileBase();
-    shape.getStyleClass().clear();
+    SolidTileFactory solidTileFactory = (SolidTileFactory) tileFactory;
+    text = solidTileFactory.createText(getID());
+    shape = solidTileFactory.createShape(getShapeType(), initialCoordinates);
+    getChildren().add(shape);
+    getChildren().add(text);
+
     shape.getStyleClass().add("right-pos-tile");
-    hoverProperty().addListener(observable -> {
-      if (isHover()) {
-        shape.getStyleClass().clear();
-        shape.getStyleClass().add("tile-hover");
+    inInitialPositionProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue) {
+        RubberBand rubberBand = new RubberBand(this);
+        PauseTransition pause = new PauseTransition(Duration.millis(350));
+        pause.setOnFinished(event -> {
+          shape.getStyleClass().clear();
+          shape.getStyleClass().add("right-pos-tile");
+        });
+        rubberBand.play();
+        pause.play();
       } else {
-        alterPosition();
+        shape.getStyleClass().clear();
+        shape.getStyleClass().add("wrong-pos-tile");
       }
     });
+
     shape.setStrokeWidth(-1);
     ((Rectangle) shape).arcHeightProperty()
         .bind(FXTileFactory.requestedTileSizeProperty().divide(10));
     ((Rectangle) shape).arcWidthProperty()
         .bind(FXTileFactory.requestedTileSizeProperty().divide(10));
-    // ((Rectangle) shape).setArcHeight(FXTileFactory.requestedTileSize.get() / 10);
-    // ((Rectangle) shape).setArcWidth(FXTileFactory.requestedTileSize.get() / 10);
   }
-
 
 
 }

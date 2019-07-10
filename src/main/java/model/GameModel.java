@@ -3,11 +3,16 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class is responsible for the game's logic.
  */
 public class GameModel {
+
+
+  private static Logger logger = LogManager.getLogger(GameModel.class);
 
   private final int boardSize;
   private Tile[][] tileBoard;
@@ -35,7 +40,9 @@ public class GameModel {
    * @return false if move is illegal else true.
    */
   public boolean move(Tile tile) {
+    logger.traceEntry("moving tile " + tile.getID() + ".");
     if (!isLegalMove(tile)) {
+      logger.traceExit(tile.getID() + " moving is not legal!");
       return false;
     }
 
@@ -45,6 +52,8 @@ public class GameModel {
     // tileBoard[blankTile.getCoordinates().getRow()][blankTile.getCoordinates().getCol()] = tile;
     tileBoard[blankTile.getCoordinates().getRow()][blankTile.getCoordinates().getCol()] = blankTile;
     tileBoard[tile.getCoordinates().getRow()][tile.getCoordinates().getCol()] = tile;
+
+    logger.traceExit(tile.getID() + " was successfully moved.");
     return true;
   }
 
@@ -71,11 +80,14 @@ public class GameModel {
    * @return false if at least one tile is not, else returns true.
    */
   public boolean isSolved() {
+    logger.traceEntry("checking if puzzle was solved...");
     for (Tile tile : tilesList) {
       if (!tile.isInRightPosition()) {
+        logger.traceExit("puzzle is NOT solved yet.");
         return false;
       }
     }
+    logger.traceExit("puzzle was solved!!");
     return true;
   }
 

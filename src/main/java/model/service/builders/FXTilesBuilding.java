@@ -29,8 +29,8 @@ public class FXTilesBuilding extends TilesBuilding {
     switch (tilesClassification) {
       case PICTURE: {
         // If Image Tile was sent grab use the factory that knows
-        // what types of weapons and engines a regular Image Tile
-        // needs. The Tile object is returned & given a name
+        // what types of power-ups (in future development) a regular Image Tile
+        // needs. The Tile object is returned.
 
         TileFactory tilePartsFactory = new PictureTileFactory();
         theTile = new PictureTile(tilePartsFactory);
@@ -38,10 +38,11 @@ public class FXTilesBuilding extends TilesBuilding {
       }
       case SOLID: {
         // If Solid Tile was sent grab use the factory that knows
-        // what types of weapons and engines a Solid Tile
-        // needs. The Tile object is returned & given a name
+        // what types of  power-ups (in future development) a Solid Tile
+        // needs. The Tile object is returned.
         TileFactory tilePartsFactory = new SolidTileFactory();
         theTile = new SolidFXTile(tilePartsFactory);
+        break;
       }
     }
     theTile.setType(tilesClassification);
