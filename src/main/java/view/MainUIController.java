@@ -138,8 +138,9 @@ public class MainUIController {
     gridSizeValidator.setRegexPattern("(^$)|([1-9]|1[0-8])");
     gridSizeTF.getValidators().add(gridSizeValidator);
     numberOfShufflesValidator = new RegexValidator("Currently 1000 is the max!");
-    // numberOfShufflesValidator.setRegexPattern("^([1-9][0-9]{0,2}|1000)$");
-    // shufflesTF.getValidators().add(numberOfShufflesValidator);
+    numberOfShufflesValidator.setRegexPattern(
+        "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[12][0-9]{3}|3000)");
+    shufflesTF.getValidators().add(numberOfShufflesValidator);
 
     // Initialize tiles holders
     tilesGroup = new Group();
@@ -229,11 +230,11 @@ public class MainUIController {
         errorAlert.setContentText("With 1 tile it's not really a game!");
         errorAlert.showAndWait();
       } else {
-        GameState.setCurrentImage(uploadedImage == null ? initialImage : uploadedImage);
+        GameState.setCurrentImage(
+            picUploadTGL.isSelected() && uploadedImage != null ? uploadedImage : initialImage);
         isActive.set(true);
       }
     });
-
 
     /*TODO: check why it doesn't show*/
     peekBUTTON.setOnAction(handle -> setVisibility(!peekBORDERPANE.isVisible(), peekBORDERPANE));
