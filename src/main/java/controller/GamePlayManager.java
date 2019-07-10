@@ -21,7 +21,6 @@ import model.service.builders.FXTilesBuilding;
 import model.service.factory.FXTileFactory;
 import model.service.factory.FXTileFactory.TileShape;
 import model.service.factory.TileFactory.TileClassification;
-import model.service.tasks.TilesMovingService;
 import model.tiles.FXTile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +33,6 @@ public class GamePlayManager {
   private final static GamePlayManager onlyInstance = new GamePlayManager();
   private AnimationPlayer animationPlayer;
   private BlockingQueue<TranslateTransition> transitionsQueue = new LinkedBlockingQueue<>();
-  private TilesMovingService movingService;
   private GameModel gameModel;
   private FXTilesBuilding tilesBuilder;
   private ArrayList<FXTile> tiles;
@@ -43,7 +41,6 @@ public class GamePlayManager {
 
   private GamePlayManager() {
     tilesBuilder = new FXTilesBuilding();
-    movingService = new TilesMovingService();
     initializeListeners();
     initializeServices();
   }
@@ -58,12 +55,15 @@ public class GamePlayManager {
 
   public void startNewGame() {
 
+    TileClassification classification =
+        GameState.getMode() == GameMode.PICTURE ? TileClassification.PICTURE
+            : TileClassification.SOLID;
+
+    GameState.setCurrentMoves(0);
+
     tilesBuilder.setTilesShape(TileShape.SQUARE);
 
-    tiles = (ArrayList<FXTile>) tilesBuilder
-        .orderTiles(GameState.getGridSize(),
-            GameState.getMode() == GameMode.PICTURE ? TileClassification.PICTURE
-                : TileClassification.SOLID);
+    tiles = (ArrayList<FXTile>) tilesBuilder.orderTiles(GameState.getGridSize(), classification);
 
     gameModel = new GameModel(GameState.getGridSize(), tiles);
 
@@ -90,7 +90,7 @@ public class GamePlayManager {
     Platform.runLater(() -> {
       mainUIController.loadBoard(tiles);
       ArrayList<FXTile> solvedBoardTiles = (ArrayList<FXTile>) tilesBuilder
-          .orderTiles(GameState.getGridSize(), TileClassification.SOLID);
+          .orderTiles(GameState.getGridSize(), classification);
       solvedBoardTiles.get(solvedBoardTiles.size() - 1).setVisible(false);
       mainUIController.loadSolution(solvedBoardTiles);
     });

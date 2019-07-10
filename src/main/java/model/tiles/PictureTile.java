@@ -24,7 +24,8 @@ public class PictureTile extends FXTile {
     assembleFXTileBase();
     PictureTileFactory pictureTileFactory = (PictureTileFactory) tileFactory;
     shape = pictureTileFactory.createShape(getShapeType(), initialCoordinates);
-    picView = pictureTileFactory.addPicture()
+    picView = pictureTileFactory.addPicture(initialCoordinates);
+    getChildren().add(picView);
     getChildren().add(shape);
 
     shape.getStyleClass().add("right-pos-tilePic");

@@ -16,7 +16,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -107,8 +106,8 @@ public class MainUIController {
   private Group peekGroup;
   private ConcurrentHashMap<Node, NodeAnimator> nodesAnimations;
   private BooleanProperty isActive;
-  private ObjectProperty<Image> initialImage;
-  private ObjectProperty<Image> uploadedPic;
+  private Image initialImage;
+  private Image uploadedImage;
   private GamePlayManager gamePlayManager;
   private FileChooser fileChooser = new FileChooser();
   private RegexValidator gridSizeValidator;
@@ -139,8 +138,8 @@ public class MainUIController {
     gridSizeValidator.setRegexPattern("(^$)|([1-9]|1[0-8])");
     gridSizeTF.getValidators().add(gridSizeValidator);
     numberOfShufflesValidator = new RegexValidator("Currently 1000 is the max!");
-    numberOfShufflesValidator.setRegexPattern("^([1-9][0-9]{0,2}|1000)$");
-    shufflesTF.getValidators().add(numberOfShufflesValidator);
+    // numberOfShufflesValidator.setRegexPattern("^([1-9][0-9]{0,2}|1000)$");
+    // shufflesTF.getValidators().add(numberOfShufflesValidator);
 
     // Initialize tiles holders
     tilesGroup = new Group();
@@ -210,12 +209,16 @@ public class MainUIController {
       }
     });
 
+    picModeTGL.selectedProperty().addListener((observable, oldValue, newValue) -> {
+      GameState.setMode(newValue ? GameMode.PICTURE : GameMode.NORMAL);
+    });
+
     browseBUTTON.setOnAction(handle -> {
       File tmp = fileChooser.showOpenDialog(Skedaddle.stage);
       if (tmp != null) {
         browsePANE.setStyle("-fx-background-color: #7FFF00");
-        uploadedPic = new Image(tmp.toURI().toString());
-        uploadedPic = optimizeImage(uploadedPic);
+        uploadedImage = new Image(tmp.toURI().toString());
+        uploadedImage = optimizeImage(uploadedImage);
         picUploadTGL.getStyleClass().add("toggle-button-picUploaded");
       }
     });
@@ -226,6 +229,7 @@ public class MainUIController {
         errorAlert.setContentText("With 1 tile it's not really a game!");
         errorAlert.showAndWait();
       } else {
+        GameState.setCurrentImage(uploadedImage == null ? initialImage : uploadedImage);
         isActive.set(true);
       }
     });
@@ -384,7 +388,7 @@ public class MainUIController {
    * @param image to be optimized.
    * @return {@see WritableImage} 400 width 400 height.
    */
-  private ObjectProperty<Image> optimizeImage(ObjectProperty<Image> image) {
+  private WritableImage optimizeImage(Image image) {
     System.out.println("W: " + image.getWidth() + " h: " + image.getHeight());
 
     double w = image.getWidth(), h = image.getHeight();

@@ -14,9 +14,12 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import model.Coordinates;
 import model.Tile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PictureTileFactory extends FXTileFactory {
 
+  private static Logger logger = LogManager.getLogger(PictureTileFactory.class);
 
   public Tile addShape() {
     System.out.println("return new TileShape(this)");
@@ -32,17 +35,17 @@ public class PictureTileFactory extends FXTileFactory {
 //    return new TileStyle(this); // Specific to regular UFO
   }
 
-  public Tile addPicture(Coordinates tilesInitialCoordinates) {
-
-    ImageView picView = new ImageView(GameState.);
+  public ImageView addPicture(Coordinates tilesInitialCoordinates) {
+    logger.traceEntry("creating imageView...");
+    ImageView picView = new ImageView(GameState.getCurrentImage());
 
     Rectangle2D rect = new Rectangle2D(getRequestedTileSize() * tilesInitialCoordinates.getCol(),
         getRequestedTileSize() * tilesInitialCoordinates.getRow(), getRequestedTileSize() - 3,
         getRequestedTileSize() - 3);
     picView.setViewport(rect);
 
-    System.out.println("return new TilePictureView(this);");
-    return null;
+    logger.traceExit("imageView creation");
+    return picView;
 //    return new TilePictureView(this); // Specific to regular UFO
   }
 

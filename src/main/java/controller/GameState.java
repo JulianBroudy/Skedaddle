@@ -5,6 +5,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.image.Image;
 
 public class GameState {
 
@@ -12,12 +14,13 @@ public class GameState {
   private static IntegerProperty gridSize;
   private static IntegerProperty currentMoves;
   private static GameMode mode;
-  private static ObjectProperty<>
+  private static ObjectProperty<Image> currentImage;
 
   static {
     GameState.isActive = new SimpleBooleanProperty(false);
     GameState.gridSize = new SimpleIntegerProperty(8);
     GameState.currentMoves = new SimpleIntegerProperty();
+    GameState.currentImage = new SimpleObjectProperty<>();
   }
 
   public static boolean isActive() {
@@ -66,6 +69,18 @@ public class GameState {
 
   public static void shuffleBoard(int i) {
     System.out.println("shuffle pressed");
+  }
+
+  public static Image getCurrentImage() {
+    return currentImage.get();
+  }
+
+  public static void setCurrentImage(Image currentImage) {
+    GameState.currentImage.set(currentImage);
+  }
+
+  public static ObjectProperty<Image> currentImageProperty() {
+    return currentImage;
   }
 
   public enum GameMode {
