@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Skedaddle extends Application {
 
-    private static Logger logger = LogManager.getLogger(Skedaddle.class);
+  private static final Logger logger = LogManager.getLogger(Skedaddle.class);
 
 
     public static Stage stage = null;

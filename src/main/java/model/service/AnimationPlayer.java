@@ -8,11 +8,9 @@ import org.apache.logging.log4j.Logger;
 
 public class AnimationPlayer implements Runnable {
 
-  private static Logger logger = LogManager.getLogger(AnimationPlayer.class);
-
-  private volatile boolean stop = false;
-
+  private static final Logger logger = LogManager.getLogger(AnimationPlayer.class);
   private BlockingQueue<TranslateTransition> queue;
+  private volatile boolean stop = false;
 
   public AnimationPlayer(BlockingQueue<? extends Transition> queue) {
     this.queue = (BlockingQueue<TranslateTransition>) queue;
@@ -22,11 +20,11 @@ public class AnimationPlayer implements Runnable {
   public void run() {
     while (!stop) {
       logger.traceEntry(Thread.currentThread().getName() + " entered while loop...");
-
       try {
         queue.take().play();
       } catch (InterruptedException e) {
         e.printStackTrace();
+        System.out.println("Gotya!");
       }
       // logger.trace(transition);
       // transition.play();

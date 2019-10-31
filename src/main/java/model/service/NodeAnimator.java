@@ -5,10 +5,10 @@ import javafx.scene.Node;
 
 public class NodeAnimator {
 
-  private Node node;
+  private final Node node;
   private Animator showNode, hideNode;
 
-  protected NodeAnimator(Node node) {
+  NodeAnimator(Node node) {
     this.node = node;
   }
 
@@ -20,7 +20,7 @@ public class NodeAnimator {
     hideNode.getAnimation().setOnFinished(e -> node.setVisible(false));
   }
 
-  protected void initializeAnimations(Animator... animations) {
+  void initializeAnimations(Animator... animations) {
     for (Animator animation : animations) {
       animation.getAnimation().setNode(node);
       animation.getAnimation().setOnFinished(e -> node.setVisible(true));

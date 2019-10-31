@@ -107,7 +107,7 @@ public enum Animator {
           TransitionsGenerator.generateFadeTransition(0.2, 0))),
   JELLO(new Jello());
 
-  AnimationUnifier animation;
+  private final AnimationUnifier animation;
 
 //  private Animator(Transition transition) {
 //    this.animation = new AnimationUnifier(transition);

@@ -13,10 +13,10 @@ import model.Coordinates;
 
 public abstract class FXTileFactory extends TileFactory {
 
-  private static DoubleProperty requestedTileSize;
-  private static double DEFAULT_GRID_LENGTH = 400;
+  private static final DoubleProperty requestedTileSize;
+  private static final double DEFAULT_GRID_LENGTH = 400;
   // Is DoubleProperty in case the grid size changes in future updates.
-  private static DoubleProperty gridLengthInPixels;
+  private static final DoubleProperty gridLengthInPixels;
 
   static {
     gridLengthInPixels = new SimpleDoubleProperty(DEFAULT_GRID_LENGTH);
@@ -24,7 +24,7 @@ public abstract class FXTileFactory extends TileFactory {
     requestedTileSize.bind(gridLengthInPixels.divide(GameState.gridSizeProperty()));
   }
 
-  ShapeFactory shapeFactory = new ShapeFactory();
+  private final ShapeFactory shapeFactory = new ShapeFactory();
 
   public static double getRequestedTileSize() {
     return requestedTileSize.get();

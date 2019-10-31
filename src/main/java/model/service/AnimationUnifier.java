@@ -10,13 +10,13 @@ import javafx.scene.Node;
 
 public class AnimationUnifier {
 
-  AnimationFX animationFX;
-  Transition transition;
-  ParallelTransition parallelTransition;
-  SequentialTransition sequentialTransition;
-  private AnimationType type;
+  private final AnimationType type;
+  private AnimationFX animationFX;
+  private Transition transition;
+  private ParallelTransition parallelTransition;
+  private SequentialTransition sequentialTransition;
 
-  public AnimationUnifier(AnimationFX animationFX) {
+  AnimationUnifier(AnimationFX animationFX) {
     this.animationFX = animationFX;
     type = AnimationType.ANIMATION;
   }
@@ -115,7 +115,7 @@ public class AnimationUnifier {
     }
   }
 
-  protected void setOnFinished(EventHandler eventHandler) {
+  void setOnFinished(EventHandler eventHandler) {
     switch (type) {
       case ANIMATION: {
         animationFX.setOnFinished(eventHandler);

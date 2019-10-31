@@ -15,7 +15,7 @@ import model.Tile;
 public abstract class TileFactory {
 
   public enum TileClassification{
-    CONCEPTUAL,SIMPLE, SOLID, PICTURE;
+    CONCEPTUAL, SIMPLE, SOLID, PICTURE
   }
 
   public static int requestedGridSize;

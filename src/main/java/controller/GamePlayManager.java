@@ -34,7 +34,7 @@ public class GamePlayManager {
   private AnimationPlayer animationPlayer;
   private BlockingQueue<TranslateTransition> transitionsQueue = new LinkedBlockingQueue<>();
   private GameModel gameModel;
-  private FXTilesBuilding tilesBuilder;
+  private final FXTilesBuilding tilesBuilder;
   private ArrayList<FXTile> tiles;
   private MainUIController mainUIController = null;
 
@@ -42,18 +42,13 @@ public class GamePlayManager {
   private GamePlayManager() {
     tilesBuilder = new FXTilesBuilding();
     initializeListeners();
-    initializeServices();
   }
 
   public static GamePlayManager getInstance() {
     return onlyInstance;
   }
 
-  private void initializeServices() {
-
-  }
-
-  public void startNewGame() {
+  private void startNewGame() {
 
     TileClassification classification =
         GameState.getMode() == GameMode.PICTURE ? TileClassification.PICTURE
@@ -130,12 +125,12 @@ public class GamePlayManager {
   }
 
 
-  public class SwappingService extends Service<Boolean> {
+  class SwappingService extends Service<Boolean> {
 
-    FXTile theTile;
+    final FXTile theTile;
     boolean tileWasMoved;
-    TranslateTransition translateTransition;
-    boolean shuffleRequest;
+    final TranslateTransition translateTransition;
+    final boolean shuffleRequest;
 
     private SwappingService(FXTile theTile, boolean shuffleRequest) {
       this.theTile = theTile;
@@ -148,6 +143,7 @@ public class GamePlayManager {
         tileMover.join();
       } catch (InterruptedException e) {
         e.printStackTrace();
+        System.out.println("couldn't join");
       }
       if (!shuffleRequest) {
         GameState.setCurrentMoves(GameState.getCurrentMoves() + 1);
@@ -202,9 +198,9 @@ public class GamePlayManager {
 
   private class ShufflingService extends Service {
 
-    private int numberOfShuffles;
+    private final int numberOfShuffles;
 
-    public ShufflingService(int numberOfShuffles) {
+    ShufflingService(int numberOfShuffles) {
       this.numberOfShuffles = numberOfShuffles;
       setOnSucceeded(event -> {
         if (gameModel.isSolved()) {

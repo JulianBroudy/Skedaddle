@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 public class PictureTileFactory extends FXTileFactory {
 
-  private static Logger logger = LogManager.getLogger(PictureTileFactory.class);
+  private static final Logger logger = LogManager.getLogger(PictureTileFactory.class);
 
   public Tile addShape() {
     System.out.println("return new TileShape(this)");

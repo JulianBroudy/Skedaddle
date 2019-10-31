@@ -13,7 +13,7 @@ public abstract class TilesBuilding extends Service {
 
   private final static Logger logger = LogManager.getLogger(TilesBuilding.class);
 
-  protected ArrayList<Tile> tilesList;
+  ArrayList<Tile> tilesList;
 
 
   // This acts as an ordering mechanism for creating

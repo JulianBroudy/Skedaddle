@@ -4,7 +4,10 @@ import javafx.scene.Node;
 
 public class ExitButtonAnimator extends NodeAnimator {
 
-  private Animator initialToStandBy, standByToInitial, standByToInGame, inGameToStandby;
+  private final Animator initialToStandBy;
+  private final Animator standByToInitial;
+  private final Animator standByToInGame;
+  private final Animator inGameToStandby;
 
   private ButtonLocation position;
 

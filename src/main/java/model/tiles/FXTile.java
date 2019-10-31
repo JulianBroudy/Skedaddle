@@ -18,28 +18,28 @@ public abstract class FXTile extends StackPane implements Tile {
 
   //TODO: refactor styleclasses into constants that are defined in factories
   private static final Logger logger = LogManager.getLogger(Tile.class);
-  protected final TileFactory tileFactory;
-  protected final Coordinates initialCoordinates;
+  final TileFactory tileFactory;
+  final Coordinates initialCoordinates;
   private final Coordinates currentCoordinates;
-  protected Text text;
-  protected Shape shape;
+  private final BooleanProperty inInitialPosition;
+  Text text;
   private String id = "John Doe";
   private TileClassification tilesClassification;
   private TileShape tilesShape;
-  private BooleanProperty inInitialPosition;
+  Shape shape;
 
   // Because I defined the toString method in shape
   // when it is printed the String defined in toString goes
   // on the screen
 
-  public FXTile(TileFactory tileFactory) {
+  FXTile(TileFactory tileFactory) {
     this.tileFactory = tileFactory;
     initialCoordinates = new Coordinates(0, 0);
     currentCoordinates = new Coordinates(0, 0);
     inInitialPosition = new SimpleBooleanProperty(true);
   }
 
-  public void assembleFXTileBase() {
+  void assembleFXTileBase() {
     logger.traceEntry("assembling FXTileBase");
     assembleTileBase(tileFactory);
     setTranslateX(getCoordinates().getCol() * FXTileFactory.getRequestedTileSize());
@@ -56,11 +56,8 @@ public abstract class FXTile extends StackPane implements Tile {
 
   public String toString() {
     // If any Tile object is printed to screen this shows up
-
-    String tilesInfo = "The " + tilesClassification + " has a top speed of " +
+    return "The " + tilesClassification + " has a top speed of " +
         " and an attack power of ";
-
-    return tilesInfo;
   }
 
   @Override
@@ -111,19 +108,19 @@ public abstract class FXTile extends StackPane implements Tile {
     this.currentCoordinates.swapWith(emptyTile.getCoordinates());
   }
 
-  public TileShape getShapeType() {
+  TileShape getShapeType() {
     return tilesShape;
   }
 
-  public void setShapeType(TileShape tilesShape) {
+  void setShapeType(TileShape tilesShape) {
     this.tilesShape = tilesShape;
   }
 
-  public boolean isInInitialPosition() {
+  private boolean isInInitialPosition() {
     return inInitialPosition.get();
   }
 
-  protected BooleanProperty inInitialPositionProperty() {
+  BooleanProperty inInitialPositionProperty() {
     return inInitialPosition;
   }
 

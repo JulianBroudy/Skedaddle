@@ -10,6 +10,7 @@ import controller.GameState;
 import controller.GameState.GameMode;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -52,7 +53,7 @@ public class MainUIController {
 
 
   private static final Logger logger = LogManager.getLogger(MainUIController.class);
-
+  private final FileChooser fileChooser = new FileChooser();
   // FXML variables
   @FXML
   private HBox parent;
@@ -109,9 +110,6 @@ public class MainUIController {
   private Image initialImage;
   private Image uploadedImage;
   private GamePlayManager gamePlayManager;
-  private FileChooser fileChooser = new FileChooser();
-  private RegexValidator gridSizeValidator;
-  private RegexValidator numberOfShufflesValidator;
   private IntegerBinding numberOfShuffles;
 
   @FXML
@@ -134,10 +132,10 @@ public class MainUIController {
     initialImage = optimizeImage(new Image("images/cat.jpg", 400, 400, true, true));
 
     // Initialize TextFields' validators
-    gridSizeValidator = new RegexValidator("3-18");
+    RegexValidator gridSizeValidator = new RegexValidator("3-18");
     gridSizeValidator.setRegexPattern("(^$)|([1-9]|1[0-8])");
     gridSizeTF.getValidators().add(gridSizeValidator);
-    numberOfShufflesValidator = new RegexValidator("Currently 1000 is the max!");
+    RegexValidator numberOfShufflesValidator = new RegexValidator("Currently 1000 is the max!");
     numberOfShufflesValidator.setRegexPattern(
         "([1-9]|[1-8][0-9]|9[0-9]|[1-8][0-9]{2}|9[0-8][0-9]|99[0-9]|[12][0-9]{3}|3000)");
     shufflesTF.getValidators().add(numberOfShufflesValidator);
@@ -210,14 +208,13 @@ public class MainUIController {
       }
     });
 
-    picModeTGL.selectedProperty().addListener((observable, oldValue, newValue) -> {
-      GameState.setMode(newValue ? GameMode.PICTURE : GameMode.NORMAL);
-    });
+    picModeTGL.selectedProperty().addListener((observable, oldValue, newValue) -> GameState
+        .setMode(newValue ? GameMode.PICTURE : GameMode.NORMAL));
 
     browseBUTTON.setOnAction(handle -> {
       File tmp = fileChooser.showOpenDialog(Skedaddle.stage);
       if (tmp != null) {
-        browsePANE.setStyle("-fx-background-color: #7FFF00");
+        browsePANE.setStyle("-fx-background-color: #49c936");
         uploadedImage = new Image(tmp.toURI().toString());
         uploadedImage = optimizeImage(uploadedImage);
         picUploadTGL.getStyleClass().add("toggle-button-picUploaded");
@@ -225,7 +222,7 @@ public class MainUIController {
     });
 
     goBUTTON.setOnAction(handle -> {
-      if (gridSizeTF.getText() == "1") {
+      if (Objects.equals(gridSizeTF.getText(), "1")) {
         Alert errorAlert = new Alert(AlertType.ERROR);
         errorAlert.setContentText("With 1 tile it's not really a game!");
         errorAlert.showAndWait();
@@ -293,9 +290,8 @@ public class MainUIController {
     });
 
     // Listen to changes of picture upload toggle button
-    picUploadTGL.selectedProperty().addListener((observable, was, isSelected) -> {
-      setVisibility(isSelected, browsePANE);
-    });
+    picUploadTGL.selectedProperty()
+        .addListener((observable, was, isSelected) -> setVisibility(isSelected, browsePANE));
 
     logger.traceExit("done with listeners.");
 
@@ -353,16 +349,13 @@ public class MainUIController {
    */
   private void animationActivator(boolean makeVisible, Node... nodes) {
     for (Node node : nodes) {
-      Platform.runLater(() -> {
-        Platform.runLater(() -> {
-
-          if (makeVisible) {
-            nodesAnimations.get(node).show();
-          } else {
-            nodesAnimations.get(node).hide();
-          }
-        });
-      });
+      Platform.runLater(() -> Platform.runLater(() -> {
+        if (makeVisible) {
+          nodesAnimations.get(node).show();
+        } else {
+          nodesAnimations.get(node).hide();
+        }
+      }));
 
     }
   }
@@ -376,9 +369,7 @@ public class MainUIController {
   private void animationExecutor(Animator animation, Node... nodes) {
     for (Node node : nodes) {
       animation.getAnimation().setNode(node);
-      Platform.runLater(() ->
-          animation.getAnimation().play()
-      );
+      Platform.runLater(() -> animation.getAnimation().play());
     }
   }
 
@@ -387,6 +378,7 @@ public class MainUIController {
    * its center.
    *
    * @param image to be optimized.
+   *
    * @return {@see WritableImage} 400 width 400 height.
    */
   private WritableImage optimizeImage(Image image) {
@@ -408,7 +400,7 @@ public class MainUIController {
 
   /**
    * Sensitive method, for now depends on the order of enums in Animator.
-   *
+   * <p>
    * TODO: implement a safer and better solution..
    */
   private void initializeAnimations() {

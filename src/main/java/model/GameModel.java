@@ -12,12 +12,12 @@ import org.apache.logging.log4j.Logger;
 public class GameModel {
 
 
-  private static Logger logger = LogManager.getLogger(GameModel.class);
+  private static final Logger logger = LogManager.getLogger(GameModel.class);
 
   private final int boardSize;
-  private Tile[][] tileBoard;
+  private final Tile[][] tileBoard;
   private Tile blankTile;
-  private List<? extends Tile> tilesList;
+  private final List<? extends Tile> tilesList;
 
   /**
    * @param boardSize is the size of one dimension of the array.
