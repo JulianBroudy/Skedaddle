@@ -66,3 +66,15 @@
 ### Extra Sample
 ![Sample 5](https://github.com/JulianBroudy/skedaddle/blob/master/Especially%20for%20you/Skedaddle%20Sample%205.gif)
 
+<br>
+
+## Built With
+* [Gradle](https://gradle.org/) - Dependency Management
+* [JFoenix](http://www.jfoenix.com/) - GUI library
+
+<br>
+
+## Authors
+
+* **[Julian Broudy](https://github.com/JulianBroudy)**
+
