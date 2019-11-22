@@ -6,8 +6,10 @@
 <br>
 
 ## Current Features 
-[![Samples](https://img.shields.io/badge/%20%20OR%20%20-Click%20to%20Scroll%20Down%20to%20Samples!-brightgreen?style=flat)](https://github.com/JulianBroudy/gcm-system#samples)
 #### Skedaddle - at the moment - supports 2 gameplay modes:
+[![Samples](https://img.shields.io/badge/%20%20OR%20%20-Click%20to%20Scroll%20Down%20to%20Samples!-brightgreen?style=flat)](https://github.com/JulianBroudy/skedaddle#samples)<br><br>
+
+
 **Both modes offer the options to:**
 - Start a new game.
 - Select the number of tiles per row - between 2 & 18. 
@@ -34,11 +36,10 @@
   - Get x seconds of "Peek" feature.
   - Convert a selected tile to an empty space.
 
-
-
+<br><br>
 
 ## Samples!
-[![WAIT](https://img.shields.io/badge/!!!-Please%20give%20the%20Gifs%20a%20moment%20to%20properly%20load.-grey?style=flat&labelColor=bf0f1b)](https://github.com/JulianBroudy/gcm-system/blob/master/README.md#samples)
+[![WAIT](https://img.shields.io/badge/!!!-Please%20give%20the%20Gifs%20a%20moment%20to%20properly%20load.-grey?style=flat&labelColor=bf0f1b)](https://github.com/JulianBroudy/skedaddle#samples)
 
 
 
