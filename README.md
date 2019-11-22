@@ -10,12 +10,13 @@
 [![Samples](https://img.shields.io/badge/%20%20OR%20%20-Click%20to%20Scroll%20Down%20to%20Samples!-brightgreen?style=flat)](https://github.com/JulianBroudy/skedaddle#samples)<br><br>
 
 
-**Both modes offer the options to:**
+**Both modes offer the following options:**
 - Start a new game.
 - Select the number of tiles per row - between 2 & 18. 
 - Shuffle without increasing your moves' count.
 - Peek - get a preview of the puzzle's solution.
 - Exit game.
+<br>
 
 **Normal Mode:**
 - Numbered tiles (in ascending order) with solid background.
@@ -23,6 +24,7 @@
 **Picture Mode:**
 - Upload a picture.
 - Use default picture.
+<br>
 
 **Future releases will include:**
 - Incorporation of timer to various game modes.
