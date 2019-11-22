@@ -1,6 +1,5 @@
 # Skedaddle
-**With the intention of exploring JavaFX capabilities, on February 2019, I started a side project that turned into this Skedaddle game. Further development is planned.**
-
+**A a side project that I started on February 2019 with the intention of exploring JavaFX capabilities, transformed into this game full of GUI effects. I am planning on expanding its features to make it a game worth shipping with any new OS.**
 
 
 <br>
